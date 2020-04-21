@@ -22,7 +22,7 @@ void initialize_attribute(attribute * attr, char * name, size_t size, int (*cmp)
     attr->offset = offset;
 }
 
-dataset read_dataset(const char * path, const char * sep, int header){
+dataset read_dataset(const char * path, const char * sep, int header, char ** string_fields, int cs){
     dataset tmp_dt;
     FILE * dataset_fp;
     char buff[255];
@@ -58,11 +58,16 @@ dataset read_dataset(const char * path, const char * sep, int header){
             tmp_dt->attributes=malloc(num_of_attributes*sizeof(attribute));
 
             int attribute_index=0;
-            size_t offset=0, total_size;
+            size_t offset=0;
             ptr = strtok(buff_tmp, sep);
             while(ptr != NULL){
                 size_t current_size=sizeof(double);
-                initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 'd', offset);
+                if(in_array(ptr,string_fields,cs)){
+                    initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 's', offset);
+                }
+                else{
+                    initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 'd', offset);
+                }
                 //advance
                 ptr = strtok(NULL, sep);
                 offset+=current_size;
@@ -83,18 +88,19 @@ dataset read_dataset(const char * path, const char * sep, int header){
 
         int attribute_index=0;
         size_t offset;
-        char tmp_data[STRING_SIZE];
         ptr = strtok(buff, sep);
         while(ptr != NULL){
-            ptr = strtok(NULL, sep);
-
-
             offset = tmp_dt->attributes[attribute_index].offset;
             if(tmp_dt->attributes[attribute_index].dtype=='d'){
                 double tmp_num;
                 tmp_num = strtod(ptr, NULL);
                 memcpy(tmp_dt->data[tmp_dt->rows]+offset, &tmp_num, sizeof(double));
             }
+            else{
+                memset(tmp_dt->data[tmp_dt->rows]+offset,'\0' ,STRING_SIZE);
+                strncpy(tmp_dt->data[tmp_dt->rows]+offset,ptr, STRING_SIZE-1);
+            }
+            ptr = strtok(NULL, sep);
             num_of_attributes++;
         }
         tmp_dt->rows++;
@@ -124,9 +130,10 @@ void free_dataset(dataset dt){
     free(dt->data);
 
     //free attributes array
-    for(int i=0; i < dt->attributes_number; i++){
-        printf("contains attribute: %s.\n", dt->attributes[i].name);
-    }
+    //debug
+    /*for(int i=0; i < dt->attributes_number; i++){*/
+        /*printf("contains attribute: %s.\n", dt->attributes[i].name);*/
+    /*}*/
     free(dt->attributes);
 
     free(dt);
@@ -138,4 +145,12 @@ char ** get_row(dataset dt, int row){
 
 char * get_element(dataset dt, int row, int col){
     return &dt->data[row][col];
+}
+
+int in_array(char *string, char **array, int s){
+    for(int i=0; i < s; i++){
+        /*printf("%s\n",array[i]);*/
+        if(!strcmp(string,array[i])) return 1;
+    }
+    return 0;
 }

@@ -9,7 +9,10 @@ int main(void){
     insert_right(Tree,Tree2);
     free_tree(Tree);
 
-    dataset dt = read_dataset("./toy_data.csv",",",1);
+    char *s="species";
+    char **b=&s;
+    printf("reading dataset\n");
+    dataset dt = read_dataset("./toy_data.csv",",",1,b,1);
     free_dataset(dt);
     return 0;
 }

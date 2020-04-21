@@ -27,7 +27,7 @@ typedef struct dataset_ * dataset;
 
 void initialize_attribute(attribute * attr, char * name, size_t size, int (*cmp)(const void*,const void *), char dtype, size_t offset);
 
-dataset read_dataset(const char * path, const char * sep, int header);
+dataset read_dataset(const char * path, const char * sep, int header, char ** string_fields, int cs);
 /* input: path is the location of the dataset
  *        sep is the separator to be uses
  *        header 0 if header is not included
@@ -43,5 +43,7 @@ void free_dataset(dataset dt);
 char ** get_row(dataset dt, int row);
 char * get_element(dataset dt, int row, int col);
 char * get_element_by_col_name(dataset dt, int row, char* name);
+
+int in_array(char *string, char **array, int s);
 
 #endif
