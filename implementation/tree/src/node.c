@@ -1,13 +1,11 @@
 #include "../include/node.h"
 #include <stdlib.h>
 
-Node create_node(Node left, Node right, int key, int isleaf) {
+Node create_node() {
     Node node;
     node = malloc(sizeof(Node_));
-    node->left = left;
-    node->right = right;
-    node->key = key;
-    node->isleaf = isleaf;
+    node->left = NULL;
+    node->right = NULL;
     return node;
 }
 

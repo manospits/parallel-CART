@@ -4,17 +4,7 @@
 #include "../include/io.h"
 
 
-int double_cmp(const void * a, const void * b){
-    double aa, bb;
-    aa = *((double *) a);
-    bb = *((double *) b);
-    if (aa == bb) return 0;
-    if (aa < bb) return -1;
-    return 1;
-}
-
-
-void initialize_attribute(attribute * attr, char * name, size_t size, int (*cmp)(const void*,const void *), char dtype, size_t offset){
+void initialize_attribute(Attribute * attr, char * name, size_t size, int (*cmp)(const void*,const void *), char dtype, size_t offset){
     strcpy(attr->name, name);
     attr->size = size;
     attr->cmp = cmp;
@@ -55,7 +45,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
 
             //allocating memory for attributes array
             tmp_dt->attributes_number=num_of_attributes;
-            tmp_dt->attributes=malloc(num_of_attributes*sizeof(attribute));
+            tmp_dt->attributes=malloc(num_of_attributes*sizeof(Attribute));
 
             int attribute_index=0;
             size_t offset=0;
@@ -101,7 +91,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
                 strncpy(tmp_dt->data[tmp_dt->rows]+offset,ptr, STRING_SIZE-1);
             }
             ptr = strtok(NULL, sep);
-            num_of_attributes++;
+            attribute_index++;
         }
         tmp_dt->rows++;
         line_num++;
@@ -117,7 +107,6 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
         }
     }
     fclose(dataset_fp);
-
     return tmp_dt;
 }
 
@@ -130,12 +119,13 @@ void free_dataset(Dataset dt){
     free(dt->data);
 
     //free attributes array
-    //debug
-    /*for(int i=0; i < dt->attributes_number; i++){*/
-        /*printf("contains attribute: %s.\n", dt->attributes[i].name);*/
-    /*}*/
     free(dt->attributes);
 
+    free(dt);
+}
+
+void free_subset_dataset(Dataset dt){
+    free(dt->data);
     free(dt);
 }
 
@@ -153,4 +143,99 @@ int in_array(char *string, char **array, int s){
         if(!strcmp(string,array[i])) return 1;
     }
     return 0;
+}
+
+Dataset get_subset(Dataset dt, phead rows){
+    int rows_size=get_size(rows);
+    Dataset tmp_dt;
+
+    tmp_dt = malloc(sizeof(Dataset_));
+    tmp_dt->attributes=dt->attributes;
+    tmp_dt->attributes_number = dt->attributes_number;
+    tmp_dt->row_size = dt->row_size;
+    tmp_dt->rows=rows_size;
+    tmp_dt->data = malloc(sizeof(char**)*tmp_dt->rows);
+
+    pnode iterator = get_list(rows);
+
+    for(int i=0; i<rows_size; i++ ){
+        int row_num = *((int *) ret_data(iterator));
+        tmp_dt->data[i]=dt->data[row_num];
+        iterator = next_node(iterator);
+    }
+    return tmp_dt;
+}
+
+int vlccmp(const void * a, const void * b){
+    char *aa = ((value_count *) a)->value;
+    char *bb = ((value_count *) b)->value;
+    return strcmp(aa,bb);
+}
+
+void modifier(void * a){
+    value_count * tmp_vlc= (value_count *) a;
+    tmp_vlc->count++;
+}
+
+
+phead unique_values(Dataset dt, Attribute * attribute){
+    phead values_list;
+    if(attribute->dtype == 's'){
+        pel_info string_type = create_type(sizeof(char)*STRING_SIZE, &str_cmp);
+        values_list=cr_list(string_type);
+        for (int i  = 0; i < dt->rows ; i++){
+            char * value = (dt->data[i])+attribute->offset;
+            if(in(values_list, value)){
+                continue;
+            }
+            else{
+                insert(values_list, value);
+            }
+        }
+    }else{
+        pel_info double_type = create_type(sizeof(double), &double_cmp);
+        values_list=cr_list(double_type);
+        for (int i  = 0; i < dt->rows ; i++){
+            double * value = (double *)(dt->data[i])+attribute->offset;
+            if(in(values_list, value)){
+                continue;
+            }
+            else{
+                insert(values_list, value);
+            }
+        }
+    }
+    return values_list;
+}
+
+phead unique_counts(Dataset dt, Attribute * attribute){
+    phead labels_list;
+    pel_info string_type = create_type(sizeof(value_count), &vlccmp);
+    labels_list=cr_list(string_type);
+
+    if(attribute->dtype == 's'){
+        for (int i  = 0; i < dt->rows ; i++){
+            char * value = (dt->data[i])+attribute->offset;
+            value_count tmp_vlc;
+            tmp_vlc.value=value;
+            tmp_vlc.count=0;
+            if(in_and_update(labels_list, &tmp_vlc, &modifier)){
+                continue;
+            }
+            else{
+                insert(labels_list, &tmp_vlc);
+            }
+        }
+    }
+    else{
+        printf("Error....");
+    }
+
+    pnode iterator = get_list(labels_list);
+    for(int i=0; i<get_size(labels_list); i++ ){
+        value_count * value = ((value_count *) ret_data(iterator));
+        printf("Unique value/count: %s/%d\n", value->value,value->count);
+        iterator = next_node(iterator);
+    }
+    return labels_list;
 }

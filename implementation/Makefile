@@ -1,4 +1,4 @@
-OBJS   = main.o tree.o node.o forest.o io.o
+OBJS   = main.o tree.o node.o forest.o io.o list.o element.o
 OUT    = cart
 CC     = gcc
 FLAGS  = -g -c -Wall
@@ -21,6 +21,12 @@ forest.o: forest/src/forest.c
 	$(CC) $(FLAGS) $?
 
 io.o: io/src/io.c
+	$(CC) $(FLAGS) $?
+
+list.o: data_structures/src/list.c
+	$(CC) $(FLAGS) $?
+
+element.o: data_structures/src/element.c
 	$(CC) $(FLAGS) $?
 
 clean:

@@ -7,6 +7,7 @@ typedef struct Tree_{
     Node root;
     Dataset train_dataset;
     char predict_field[STRING_SIZE];
+    Attribute * predict_attribute;
 }Tree_;
 
 typedef Tree_ * Tree;
@@ -18,6 +19,8 @@ double calc_gini_coefficient();
 void find_best_split();
 
 Tree build_classification_tree(Dataset dataset, char *class_field);
+
+Node grow_tree(Tree clf_tree, Dataset subset);
 
 double classification_predict();
 
