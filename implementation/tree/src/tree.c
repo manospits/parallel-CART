@@ -67,16 +67,15 @@ Tree build_classification_tree(Dataset train_dataset, char *class_field) {
     /*gini_imp = calc_gini_coefficient(train_dataset, class_attr);*/
     /*printf("Gini is %f\n", gini_imp);*/
 
-    //add root node with all training data instances
-    clf_tree->root=create_node(NULL, NULL, 1, 0);
+    //start with all training data instances
     pel_info int_type = create_type(sizeof(int), &intcmp );
     phead rows_list=cr_list(int_type);
     for(int i = 0; i < train_dataset->rows; i++){
         insert(rows_list, &i);
     }
     Dataset subset = get_subset(train_dataset, rows_list);
-
     ds_list_plus_data(rows_list, &free);
+
 
     //call recursive function to build tree
     clf_tree->root=grow_tree(clf_tree, subset);
