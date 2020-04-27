@@ -1,0 +1,32 @@
+#ifndef _TREE_
+#define _TREE_
+#include "./node.h"
+#include "../../io/include/io.h"
+
+typedef struct Tree_{
+    Node root;
+    Dataset train_dataset;
+    char predict_field[STRING_SIZE];
+}Tree_;
+
+typedef Tree_ * Tree;
+
+double calc_entropy();
+
+double calc_gini_coefficient();
+
+void find_best_split();
+
+Tree build_classification_tree(Dataset dataset, char *class_field);
+
+double classification_predict();
+
+void build_regression_tree();
+
+double regression_predict();
+
+Tree create_tree(Dataset train_dataset, char *class_field);
+
+void del_tree(Tree tree);
+
+#endif
