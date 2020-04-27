@@ -98,7 +98,11 @@ Node grow_tree(Tree clf_tree, Dataset subset){
         if(!strcmp(subset->attributes[i].name, clf_tree->predict_field)) continue;
 
         phead unique_col_i_values = unique_values(current->subset, &(subset->attributes[i]));
-
+        pnode iterator_j = get_list(unique_col_i_values);
+        for(int j = 0; j < get_size(unique_col_i_values); j++){
+            //TODO CONTINUE MISERY
+            iterator_j = next_node(iterator_j);
+        }
         ds_list_plus_data(unique_col_i_values, &free);
     }
     return current;
