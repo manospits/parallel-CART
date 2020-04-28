@@ -21,8 +21,8 @@ void sample_indexes(int n_data, int n_samples, int **indexes) {
     } 
 }
 
-void create_samples() {
-
+void create_subset(Dataset dataset, int n_data, double sample_ratio) {
+    int n_samples = n_data * sample_ratio;
 }
 
 void free_subsets() {
