@@ -40,6 +40,6 @@ element.o: data_structures/src/element.c
 	$(CC) $(FLAGS) $?
 
 clean:
-	rm -f $(OBJS) $(OUT)
+	rm -f $(OBJS) $(OUT) forest_main.o
 
 

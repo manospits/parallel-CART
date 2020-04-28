@@ -15,7 +15,7 @@ phead sample_indexes(int n_data, int n_samples, int rank) {
     }
 
     // Randomly choose and replace indexes
-    for (i = n_samples; i < n_data; i++) {
+    for(i = n_samples; i < n_data; i++) {
         int j = rand() % (i + 1); 
   
         if (j < n_samples) {
