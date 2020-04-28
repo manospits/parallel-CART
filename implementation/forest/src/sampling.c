@@ -23,27 +23,11 @@ phead sample_indexes(int rank, int n_data, int n_samples) {
         }
     }
 
-    for(int i = 0; i < n_samples; i++) {
-        printf("%d ", temp_indexes[i]);
-    }
-    
-    printf("\n");
-
-    pel_info int_type = create_type(sizeof(int), &intcmp, &free );
+    pel_info int_type = create_type(sizeof(int), &intcmp, &free);
     phead indexes = cr_list(int_type);
-    for(int i = 0; i < n_data; i++){
+    for(int i = 0; i < n_samples; i++){
         insert(indexes, &temp_indexes[i]);
     }
-    // insert(indexes, &temp_indexes);
-
-    printf("Sampling..\n");
-    pnode iterator = get_list(indexes);
-    for(int i=0; i<n_samples; i++ ){
-        int row_num = *((int *) ret_data(iterator));
-        printf("%d ", row_num);
-        iterator = next_node(iterator);
-    }
-    printf("\n\n");
 
     return indexes;
 }
@@ -52,17 +36,18 @@ void create_random_subsets(Dataset dataset, Dataset **subsets, int n_trees, int 
     int i;
     int n_samples = n_data * sample_ratio;
 
-    *subsets = malloc(n_trees);
+    *subsets = malloc(n_trees * sizeof(Dataset));
 
     for(i = 0; i < n_trees; i++) {
         phead indexes;
         indexes = sample_indexes(i, n_data, n_samples);
-
-        Dataset subset = get_subset(dataset, indexes);
-
+        (*subsets)[i] = get_subset(dataset, indexes);
     }
 }
 
-void free_subsets() {
-
+void free_subsets(Dataset **subsets, int n_trees) {
+    for(int i = 0; i < n_trees; i++) {
+        free((*subsets)[i]->data);
+    }
+    free(*subsets);
 }
