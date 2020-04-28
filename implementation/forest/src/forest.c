@@ -21,7 +21,7 @@ void create_forest(Dataset dataset, int n_trees, double sample_ratio) {
         printf("Chopping the tree :\\\n");
         del_tree(clf_tree);
 
-        free_dataset(subset);
+        free_subset_dataset(subset);
     }
 }
 
