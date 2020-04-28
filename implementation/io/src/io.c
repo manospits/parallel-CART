@@ -28,7 +28,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
 
     while(fgets(buff, 255, dataset_fp)){
         //remove newline
-        size_t ln = strlen(buff) - 1;
+        size_t ln = strlen(buff) - 1;	
         if (*buff && buff[ln] == '\n')
             buff[ln] = '\0';
 
@@ -51,12 +51,14 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
             size_t offset=0;
             ptr = strtok(buff_tmp, sep);
             while(ptr != NULL){
-                size_t current_size=sizeof(double);
+                size_t current_size;
                 if(in_array(ptr,string_fields,cs)){
                     initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 's', offset);
-                }
+                    current_size=sizeof(char)*STRING_SIZE;
+		}
                 else{
                     initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 'd', offset);
+		    current_size=sizeof(double);
                 }
                 //advance
                 ptr = strtok(NULL, sep);
@@ -86,8 +88,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
                 tmp_num = strtod(ptr, NULL);
                 memcpy(tmp_dt->data[tmp_dt->rows]+offset, &tmp_num, sizeof(double));
             }
-            else{
-                memset(tmp_dt->data[tmp_dt->rows]+offset,'\0' ,STRING_SIZE);
+            else{ 
                 strncpy(tmp_dt->data[tmp_dt->rows]+offset,ptr, STRING_SIZE-1);
             }
             ptr = strtok(NULL, sep);
@@ -97,7 +98,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
         line_num++;
 
         //check if more memory is needed and reallocate
-        if(tmp_dt->rows == tmp_dt->allocated_rows){
+        if(tmp_dt->rows == tmp_dt->allocated_rows){ 
             int new_rows_num = tmp_dt->allocated_rows*2;
             tmp_dt->data = realloc(tmp_dt->data, sizeof(char**)*new_rows_num);
             for(int i = tmp_dt->allocated_rows; i < new_rows_num; i++){

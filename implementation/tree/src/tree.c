@@ -91,12 +91,22 @@ void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset *
     left = cr_list(int_type);
     right = cr_list(int_type);
     for(int i = 0; i < subset->rows; i++){
-        char * value2 = subset->data[i]+subset->attributes[attribute_index].offset;
-        printf("---- %f---\n", * (double *)value2)
-        if((subset->attributes[attribute_index].cmp(value, value2 ))>=0)
-            insert(right, &i);
-        else
-            insert(left, &i);
+	if (subset->attributes[attribute_index].dtype=='s'){
+		char * value2 = subset->data[i]+subset->attributes[attribute_index].offset; 
+        	if((subset->attributes[attribute_index].cmp(value, value2))>=0)
+            		insert(right, &i);
+        	else
+            		insert(left, &i);
+
+	}
+	else{
+		double value2 = *(double *) subset->data[i]+subset->attributes[attribute_index].offset;
+		//printf("---- %f---\n", value2);
+		if((subset->attributes[attribute_index].cmp(value, &value2 ))>=0)
+		    insert(right, &i);
+		else
+		    insert(left, &i);
+	}
     }
     printf("right %d left %d\n", get_size(right), get_size(left));
     *leftSubset = get_subset(subset, left);
