@@ -8,7 +8,8 @@ typedef struct element* pel;
 //creating info about the type you want to use,
 //must use free(name_of_the_element_info) to clean
 pel_info create_type(size_t size,                       //size of the data
-                 int (*cmp)(const void*,const void *)); //comparator to use
+                 int (*cmp)(const void*,const void *),
+                 void (*destr)(void *)); //comparator to use
 //create a data element
 pel create_elem(pel_info,void *);
 //compares to elements

@@ -11,9 +11,8 @@ pnode cr_node(phead listh,void *data);
 void NO_DESTR(void *);
 
 //DESTROY
-void ds_list(phead ltodestroy);               //destroys list but doesn't frees allocate datatypes
-void ds_list_plus_data(phead ltodestroy,void (*destr)(void *)); //destroys list and alllocated datatypes use NO_DESTR if you dont want
-                                                                //to free data
+void ds_list(phead ltodestroy);               //destroys list and free datatype
+
 void ds_node(phead listh,pnode ntodestroy);  //destroys a node
 
 //MODIFY

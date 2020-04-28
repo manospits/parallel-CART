@@ -48,7 +48,7 @@ double calc_gini_coefficient(Dataset dt, Attribute * class_attr) {
         iterator_i = next_node(iterator_i);
     }
 
-    ds_list_plus_data(counts, &free);
+    ds_list(counts);
 
     return imp;
 }
@@ -68,13 +68,13 @@ Tree build_classification_tree(Dataset train_dataset, char *class_field) {
     /*printf("Gini is %f\n", gini_imp);*/
 
     //start with all training data instances
-    pel_info int_type = create_type(sizeof(int), &intcmp );
+    pel_info int_type = create_type(sizeof(int), &intcmp, &free );
     phead rows_list=cr_list(int_type);
     for(int i = 0; i < train_dataset->rows; i++){
         insert(rows_list, &i);
     }
     Dataset subset = get_subset(train_dataset, rows_list);
-    ds_list_plus_data(rows_list, &free);
+    ds_list(rows_list);
 
 
     //call recursive function to build tree
@@ -87,12 +87,12 @@ void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset *
     phead left;
     phead right;
 
-    pel_info int_type = create_type(sizeof(int), &intcmp );
+    pel_info int_type = create_type(sizeof(int), &intcmp, &free );
     left = cr_list(int_type);
     right = cr_list(int_type);
     for(int i = 0; i < subset->rows; i++){
 	if (subset->attributes[attribute_index].dtype=='s'){
-		char * value2 = subset->data[i]+subset->attributes[attribute_index].offset; 
+		char * value2 = subset->data[i]+subset->attributes[attribute_index].offset;
         	if((subset->attributes[attribute_index].cmp(value, value2))>=0)
             		insert(right, &i);
         	else
@@ -111,8 +111,8 @@ void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset *
     printf("right %d left %d\n", get_size(right), get_size(left));
     *leftSubset = get_subset(subset, left);
     *rightSubset = get_subset(subset, right);
-    ds_list_plus_data(left, &free);
-    ds_list_plus_data(right, &free);
+    ds_list(left);
+    ds_list(right);
 }
 
 Node grow_tree(Tree clf_tree, Dataset subset){
@@ -159,7 +159,7 @@ Node grow_tree(Tree clf_tree, Dataset subset){
 
             iterator_j = next_node(iterator_j);
         }
-        ds_list_plus_data(unique_col_i_values, &free);
+        ds_list(unique_col_i_values);
     }
     return current;
 }
