@@ -1,4 +1,6 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include "node.h"
-#include "../tree/tree.h"
+#ifndef _FOREST_
+#define _FOREST_
+
+
+
+#endif
