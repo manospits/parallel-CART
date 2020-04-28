@@ -83,24 +83,70 @@ Tree build_classification_tree(Dataset train_dataset, char *class_field) {
     return clf_tree;
 }
 
+void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset * leftSubset, Dataset * rightSubset){
+    phead left;
+    phead right;
+
+    pel_info int_type = create_type(sizeof(int), &intcmp );
+    left = cr_list(int_type);
+    right = cr_list(int_type);
+    for(int i = 0; i < subset->rows; i++){
+        char * value2 = subset->data[i]+subset->attributes[attribute_index].offset;
+        printf("---- %f---\n", * (double *)value2)
+        if((subset->attributes[attribute_index].cmp(value, value2 ))>=0)
+            insert(right, &i);
+        else
+            insert(left, &i);
+    }
+    printf("right %d left %d\n", get_size(right), get_size(left));
+    *leftSubset = get_subset(subset, left);
+    *rightSubset = get_subset(subset, right);
+    ds_list_plus_data(left, &free);
+    ds_list_plus_data(right, &free);
+}
+
 Node grow_tree(Tree clf_tree, Dataset subset){
     if(subset->rows == 0) return NULL;
     Node current=create_node();
     current->subset = subset;
+    /*for(int i = 0; i < current->subset->rows; i++){*/
+        /*for (int j =0; j < current->subset->attributes_number; j++){*/
+            /*if(subset->attributes[j].dtype=='s')*/
+                /*printf("%s ", current->subset->data[i]+current->subset->attributes[j].offset);*/
+             /*if(subset->attributes[j].dtype=='d')*/
+                /*printf("%f ",*(double*) current->subset->data[i]+current->subset->attributes[j].offset);*/
+        /*}*/
+        /*printf("\n");*/
+    /*}*/
     double current_score = calc_gini_coefficient(current->subset, clf_tree->predict_attribute);
     printf("Gini is %f\n", current_score);
     double best_gain = 0.0;
     Attribute * best_attribute;
     Dataset best_set_left;
     Dataset best_set_right;
-
+    phead unique_col_i_values;
+    pnode iterator_j;
     for (int i=0; i < current->subset->attributes_number; i++){
+        printf("Column: %s\n", subset->attributes[i].name);
         if(!strcmp(subset->attributes[i].name, clf_tree->predict_field)) continue;
 
-        phead unique_col_i_values = unique_values(current->subset, &(subset->attributes[i]));
-        pnode iterator_j = get_list(unique_col_i_values);
+        unique_col_i_values = unique_values(current->subset, &(current->subset->attributes[i]));
+        iterator_j = get_list(unique_col_i_values);
+
         for(int j = 0; j < get_size(unique_col_i_values); j++){
             //TODO CONTINUE MISERY
+            Dataset tmp_left;
+            Dataset tmp_right;
+            divide_dataset(current->subset, i, ret_data(iterator_j), &tmp_left, &tmp_right);
+            int len_right = tmp_right->rows;
+            int len_left = tmp_left->rows;
+            printf("value: %f\n", *(double *)ret_data(iterator_j));
+            printf("right %d left %d\n", len_right, len_left);
+            if(1){
+                free_subset_dataset(tmp_left);
+                free_subset_dataset(tmp_right);
+            }
+
             iterator_j = next_node(iterator_j);
         }
         ds_list_plus_data(unique_col_i_values, &free);

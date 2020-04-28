@@ -106,6 +106,15 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
             tmp_dt->allocated_rows=new_rows_num;
         }
     }
+    /*for(int i = 0; i < tmp_dt->rows; i++){*/
+        /*for (int j =0; j < tmp_dt->attributes_number; j++){*/
+            /*if(tmp_dt->attributes[j].dtype=='s')*/
+                /*printf("%s ", tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
+             /*if(tmp_dt->attributes[j].dtype=='d')*/
+                /*printf("%f ",*(double*) tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
+        /*}*/
+        /*printf("\n");*/
+    /*}*/
     fclose(dataset_fp);
     return tmp_dt;
 }
@@ -184,7 +193,7 @@ phead unique_values(Dataset dt, Attribute * attribute){
         pel_info string_type = create_type(sizeof(char)*STRING_SIZE, &str_cmp);
         values_list=cr_list(string_type);
         for (int i  = 0; i < dt->rows ; i++){
-            char * value = (dt->data[i])+attribute->offset;
+            char * value = dt->data[i]+attribute->offset;
             if(in(values_list, value)){
                 continue;
             }
@@ -196,12 +205,12 @@ phead unique_values(Dataset dt, Attribute * attribute){
         pel_info double_type = create_type(sizeof(double), &double_cmp);
         values_list=cr_list(double_type);
         for (int i  = 0; i < dt->rows ; i++){
-            double * value = (double *)(dt->data[i])+attribute->offset;
-            if(in(values_list, value)){
+            double value = * (double *) dt->data[i]+attribute->offset;
+            if(in(values_list, &value)){
                 continue;
             }
             else{
-                insert(values_list, value);
+                insert(values_list, &value);
             }
         }
     }
@@ -215,7 +224,7 @@ phead unique_counts(Dataset dt, Attribute * attribute){
 
     if(attribute->dtype == 's'){
         for (int i  = 0; i < dt->rows ; i++){
-            char * value = (dt->data[i])+attribute->offset;
+            char * value = dt->data[i]+attribute->offset;
             value_count tmp_vlc;
             tmp_vlc.value=value;
             tmp_vlc.count=0;

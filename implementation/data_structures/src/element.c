@@ -70,6 +70,7 @@ int int_cmp(const void * a, const void * b){
 int double_cmp(const void * a, const void * b){
     double aa = *(double *) a;
     double bb = *(double *) b;
+    printf("%f - %f\n",aa,bb);
     if (aa == bb)
         return 0;
     else if(aa < bb)
