@@ -240,12 +240,5 @@ phead unique_counts(Dataset dt, Attribute * attribute){
     else{
         printf("Error....");
     }
-
-    pnode iterator = get_list(labels_list);
-    for(int i=0; i<get_size(labels_list); i++ ){
-        value_count * value = ((value_count *) ret_data(iterator));
-        printf("Unique value/count: %s/%d\n", value->value,value->count);
-        iterator = next_node(iterator);
-    }
     return labels_list;
 }
