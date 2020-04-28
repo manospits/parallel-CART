@@ -11,9 +11,7 @@ int main(void){
     double sample_ratio = 0.5;
     printf("Reading dataset...\n");
     Dataset dt = read_dataset("./toy_data.csv",",",1,b,1);
-    Dataset *subsets;
-
-    create_random_subsets(dt, &subsets, n_trees, dt->rows, sample_ratio);
+    Dataset **subsets = (Dataset **) malloc(n_trees * sizeof(Dataset*));
 
     // Tree clf_tree = build_classification_tree(dt, "species");
     // del_tree(clf_tree);
