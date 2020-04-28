@@ -53,12 +53,12 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
             while(ptr != NULL){
                 size_t current_size=0;
                 if(in_array(ptr,string_fields,cs)){
-                    initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 's', offset);
                     current_size=sizeof(char)*STRING_SIZE;
-		        }
+                    initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 's', offset);
+                }
                 else{
+                    current_size=sizeof(double);
                     initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 'd', offset);
-		            current_size=sizeof(double);
                 }
                 //advance
                 ptr = strtok(NULL, sep);
@@ -112,7 +112,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
             /*if(tmp_dt->attributes[j].dtype=='s')*/
                 /*printf("%s ", tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
              /*if(tmp_dt->attributes[j].dtype=='d')*/
-                /*printf("%f ",*(double*) tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
+                /*printf("%f ",*(double*)(tmp_dt->data[i]+tmp_dt->attributes[j].offset));*/
         /*}*/
         /*printf("\n");*/
     /*}*/
@@ -206,7 +206,7 @@ phead unique_values(Dataset dt, Attribute * attribute){
         pel_info double_type = create_type(sizeof(double), &double_cmp, &free);
         values_list=cr_list(double_type);
         for (int i  = 0; i < dt->rows ; i++){
-            double value = * (double *) dt->data[i]+attribute->offset;
+            double value = * (double *) (dt->data[i]+attribute->offset);
             if(in(values_list, &value)){
                 continue;
             }
