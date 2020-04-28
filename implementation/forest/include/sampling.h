@@ -1,9 +1,8 @@
 #ifndef _SAMPLING_
 #define _SAMPLING_
 
-void initialise_samples();
 void sample_indexes();
-void create_subset();
+void create_random_subsets();
 void free_subsets();
 
 #endif
