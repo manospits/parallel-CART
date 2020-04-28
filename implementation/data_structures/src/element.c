@@ -7,6 +7,7 @@ typedef struct element_info {
     size_t size;
     int flag;
     int (*cmp)(const void*,const void *);
+    void (*destr)(void *);
 }element_info;
 
 typedef struct element{
@@ -14,7 +15,7 @@ typedef struct element{
 }element;
 
 pel_info create_type(size_t size,
-                 int (*cmp)(const void*,const void *)){
+                 int (*cmp)(const void*,const void *), void (*destr)(void *)){
     pel_info tmp=malloc(sizeof(struct element_info));
     if(tmp==NULL){
         fprintf(stderr,"Error allocating space -element.c.\n");
@@ -22,6 +23,7 @@ pel_info create_type(size_t size,
     }
     tmp->size=size;
     tmp->cmp=cmp;
+    tmp->destr=destr;
     return tmp;
 }
 
@@ -41,6 +43,7 @@ int type_cmp(pel_info pinfo,pel a,pel b){
 }
 
 void type_destr(pel_info pinfo, pel a){
+    pinfo->destr(a->elem);
     free(a);
 }
 
