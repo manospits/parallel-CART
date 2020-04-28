@@ -49,6 +49,8 @@ void free_dataset(Dataset dt);
  * Frees the resources of the Dataset (input)
  */
 
+void free_subset_dataset(Dataset dt);
+
 char ** get_row(Dataset dt, int row);
 /*
  * returns a pointer to the row with number `row'

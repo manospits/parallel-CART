@@ -28,7 +28,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
 
     while(fgets(buff, 255, dataset_fp)){
         //remove newline
-        size_t ln = strlen(buff) - 1;
+        size_t ln = strlen(buff) - 1;	
         if (*buff && buff[ln] == '\n')
             buff[ln] = '\0';
 
@@ -51,12 +51,14 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
             size_t offset=0;
             ptr = strtok(buff_tmp, sep);
             while(ptr != NULL){
-                size_t current_size=sizeof(double);
+                size_t current_size;
                 if(in_array(ptr,string_fields,cs)){
                     initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 's', offset);
-                }
+                    current_size=sizeof(char)*STRING_SIZE;
+		}
                 else{
                     initialize_attribute(&(tmp_dt->attributes[attribute_index]), ptr, current_size, &double_cmp, 'd', offset);
+		    current_size=sizeof(double);
                 }
                 //advance
                 ptr = strtok(NULL, sep);
@@ -86,8 +88,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
                 tmp_num = strtod(ptr, NULL);
                 memcpy(tmp_dt->data[tmp_dt->rows]+offset, &tmp_num, sizeof(double));
             }
-            else{
-                memset(tmp_dt->data[tmp_dt->rows]+offset,'\0' ,STRING_SIZE);
+            else{ 
                 strncpy(tmp_dt->data[tmp_dt->rows]+offset,ptr, STRING_SIZE-1);
             }
             ptr = strtok(NULL, sep);
@@ -97,7 +98,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
         line_num++;
 
         //check if more memory is needed and reallocate
-        if(tmp_dt->rows == tmp_dt->allocated_rows){
+        if(tmp_dt->rows == tmp_dt->allocated_rows){ 
             int new_rows_num = tmp_dt->allocated_rows*2;
             tmp_dt->data = realloc(tmp_dt->data, sizeof(char**)*new_rows_num);
             for(int i = tmp_dt->allocated_rows; i < new_rows_num; i++){
@@ -106,6 +107,15 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
             tmp_dt->allocated_rows=new_rows_num;
         }
     }
+    /*for(int i = 0; i < tmp_dt->rows; i++){*/
+        /*for (int j =0; j < tmp_dt->attributes_number; j++){*/
+            /*if(tmp_dt->attributes[j].dtype=='s')*/
+                /*printf("%s ", tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
+             /*if(tmp_dt->attributes[j].dtype=='d')*/
+                /*printf("%f ",*(double*) tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
+        /*}*/
+        /*printf("\n");*/
+    /*}*/
     fclose(dataset_fp);
     return tmp_dt;
 }
@@ -184,7 +194,7 @@ phead unique_values(Dataset dt, Attribute * attribute){
         pel_info string_type = create_type(sizeof(char)*STRING_SIZE, &str_cmp);
         values_list=cr_list(string_type);
         for (int i  = 0; i < dt->rows ; i++){
-            char * value = (dt->data[i])+attribute->offset;
+            char * value = dt->data[i]+attribute->offset;
             if(in(values_list, value)){
                 continue;
             }
@@ -196,12 +206,12 @@ phead unique_values(Dataset dt, Attribute * attribute){
         pel_info double_type = create_type(sizeof(double), &double_cmp);
         values_list=cr_list(double_type);
         for (int i  = 0; i < dt->rows ; i++){
-            double * value = (double *)(dt->data[i])+attribute->offset;
-            if(in(values_list, value)){
+            double value = * (double *) dt->data[i]+attribute->offset;
+            if(in(values_list, &value)){
                 continue;
             }
             else{
-                insert(values_list, value);
+                insert(values_list, &value);
             }
         }
     }
@@ -215,7 +225,7 @@ phead unique_counts(Dataset dt, Attribute * attribute){
 
     if(attribute->dtype == 's'){
         for (int i  = 0; i < dt->rows ; i++){
-            char * value = (dt->data[i])+attribute->offset;
+            char * value = dt->data[i]+attribute->offset;
             value_count tmp_vlc;
             tmp_vlc.value=value;
             tmp_vlc.count=0;
