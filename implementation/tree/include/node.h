@@ -5,8 +5,10 @@
 typedef struct Node_ {
     struct Node_ *left;
     struct Node_ *right;
+    char * most_common;
+    char * split_val;
     Dataset subset;
-    Attribute attr;
+    Attribute * attr;
     int key;
     int isleaf;
 } Node_;

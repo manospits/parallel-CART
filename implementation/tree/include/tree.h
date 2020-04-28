@@ -20,6 +20,10 @@ void find_best_split();
 
 Tree build_classification_tree(Dataset dataset, char *class_field);
 
+char * traverse(Tree clf_tree, Node current, char * row);
+
+char * predict_row(Tree clf_tree, char * row);
+
 void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset * leftSubset, Dataset * rightSubset);
 
 Node grow_tree(Tree clf_tree, Dataset subset);
