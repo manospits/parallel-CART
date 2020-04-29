@@ -141,7 +141,7 @@ Node grow_tree(Tree clf_tree, Dataset subset){
     current->subset = subset;
 
     char * most_common=NULL;
-    int max_count=0;
+    int max_count=-1;
     phead counts=unique_counts(current->subset, clf_tree->predict_attribute);
     pnode iterator_c = get_list(counts);
     for(int i=0; i<get_size(counts); i++ ){
@@ -155,7 +155,6 @@ Node grow_tree(Tree clf_tree, Dataset subset){
     current->most_common = malloc(clf_tree->predict_attribute->size);
     memcpy(current->most_common, most_common, clf_tree->predict_attribute->size);
     ds_list(counts);
-    /*printf("%s\n", current->most_common);*/
     double current_score = calc_gini_coefficient(current->subset, clf_tree->predict_attribute);
     /*printf("Gini is %f\n", current_score);*/
     double best_gain = 0.0;

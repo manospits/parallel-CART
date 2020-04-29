@@ -228,7 +228,7 @@ phead unique_counts(Dataset dt, Attribute * attribute){
             char * value = dt->data[i]+attribute->offset;
             value_count tmp_vlc;
             tmp_vlc.value=value;
-            tmp_vlc.count=0;
+            tmp_vlc.count=1;
             if(in_and_update(labels_list, &tmp_vlc, &modifier)){
                 continue;
             }
