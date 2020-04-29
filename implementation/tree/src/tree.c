@@ -140,7 +140,7 @@ Node grow_tree(Tree clf_tree, Dataset subset){
     Node current=create_node();
     current->subset = subset;
 
-    char * most_common;
+    char * most_common=NULL;
     int max_count=0;
     phead counts=unique_counts(current->subset, clf_tree->predict_attribute);
     pnode iterator_c = get_list(counts);
