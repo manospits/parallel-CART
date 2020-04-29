@@ -7,12 +7,6 @@
 #include "../../io/include/io.h"
 #include "string.h"
 
-double calc_entropy() {
-    double entropy = 0;
-
-    return entropy;
-}
-
 /*def gini(rows):*/
 /*total = len(rows)*/
 /*counts = uniqueCounts(rows)*/
@@ -218,21 +212,6 @@ Node grow_tree(Tree clf_tree, Dataset subset){
         current->left = grow_tree(clf_tree, best_set_left);
     }
     return current;
-}
-
-
-double classification_predict() {
-
-    return 0.0;
-}
-
-void build_regression_tree() {
-
-}
-
-double regression_predict() {
-
-    return 0.0;
 }
 
 Tree create_tree(Dataset train_dataset, char *class_field){

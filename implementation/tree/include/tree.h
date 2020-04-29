@@ -12,8 +12,6 @@ typedef struct Tree_{
 
 typedef Tree_ * Tree;
 
-double calc_entropy();
-
 double calc_gini_coefficient();
 
 void find_best_split();
@@ -27,12 +25,6 @@ char * predict_row(Tree clf_tree, char * row);
 void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset * leftSubset, Dataset * rightSubset);
 
 Node grow_tree(Tree clf_tree, Dataset subset);
-
-double classification_predict();
-
-void build_regression_tree();
-
-double regression_predict();
 
 Tree create_tree(Dataset train_dataset, char *class_field);
 

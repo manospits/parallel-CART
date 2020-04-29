@@ -1,11 +1,23 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 #include "../../io/include/io.h"
 #include "../../tree/include/tree.h"
 #include "../include/sampling.h"
 
-void create_forest(Dataset dataset, int n_trees, double sample_ratio) {
+char **train_and_vote(Dataset dataset, int n_trees, double sample_ratio) {
 
+    // Dummy length of predict dataset
+    int predict_len = 5;
+
+    // Allocate memory for output table
+    size_t offset = sizeof(char*) * STRING_SIZE;
+    char **tree_votes = malloc(sizeof(char**) * n_trees);
+    for(int i=0; i < n_trees; i++){
+        tree_votes[i] = malloc(sizeof(char*) * STRING_SIZE * predict_len);
+    }
+
+    // Iterate over n_trees and form n_trees votes
     for(int i = 0; i < n_trees; i++) {
         printf("Creating randomly sampled subset...\n");
         Dataset subset = create_random_subset(dataset, dataset->rows, sample_ratio, i);
@@ -16,32 +28,22 @@ void create_forest(Dataset dataset, int n_trees, double sample_ratio) {
         printf("Tree grew up...\n");
 
         printf("Gathering a seed...\n");
-        printf("%s\n", predict_row(clf_tree, dataset->data[0]));
+
+        for(int j = 0; j < predict_len; j++) {
+            strcpy(tree_votes[i] + (j * offset), predict_row(clf_tree, dataset->data[0]));
+        }
 
         printf("Chopping the tree :\\\n");
         del_tree(clf_tree);
-
         free_subset_dataset(subset);
+        printf("\n\n");
     }
+
+    return tree_votes;
 }
 
-int forest_prediction(int *tree_votes, int n_trees) {
-    int max_count = 0, prediction = 0;
+char *forest_prediction(char **tree_votes, int n_trees) {
+    char *lel = "l";
 
-    for(int i = 0; i < n_trees; i++) {
-        int count  = 0;
-
-        for(int j = 0; j < n_trees; j++) {
-            if(tree_votes[i] == tree_votes[j]) {
-                count += 1;
-            }
-        }
-
-        if(count > max_count) {
-            max_count = count;
-            prediction = tree_votes[i];
-        }
-    }
-
-    return prediction;
+    return lel;
 }
