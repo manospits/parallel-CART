@@ -19,7 +19,7 @@ int main(void){
     char **forest_predictions;
 
     printf("Reading dataset...\n");
-    dt = read_dataset("../data/7796666/Apr_borough_grocery.csv",",",1,b,1);
+    dt = read_dataset("../data/7796666/dataset.csv",",",1,b,1);
 
     printf("Creating test, train subset...\n");
     train_test_split(dt, &train_set, &test_set, test_train_ratio);
