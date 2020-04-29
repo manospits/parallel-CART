@@ -26,8 +26,7 @@ int main(void){
 
     printf("Forest votes...\n");
     for(int i = 0; i < 5; i++) {
-        size_t offset = sizeof(char*) + STRING_SIZE;
-        printf("%d: %s\n", i, forest_predictions[i] + offset);
+        printf("%d: %s\n", i, forest_predictions[i]);
     }
 
     printf("Cleaning up...\n");

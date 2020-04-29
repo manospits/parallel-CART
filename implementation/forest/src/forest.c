@@ -30,7 +30,7 @@ char **train_and_vote(Dataset dataset, int n_trees, double sample_ratio) {
         printf("Gathering a seed...\n");
 
         for(int j = 0; j < predict_len; j++) {
-            strcpy(tree_votes[i] + (j * offset), predict_row(clf_tree, dataset->data[0]));
+            strcpy(tree_votes[i] + (j * offset), predict_row(clf_tree, dataset->data[j * 20]));
         }
 
         printf("Chopping the tree :\\\n");
@@ -38,16 +38,6 @@ char **train_and_vote(Dataset dataset, int n_trees, double sample_ratio) {
         free_subset_dataset(subset);
         printf("\n\n");
     }
-
-
-    printf("\n\nDEBUG\n");
-    for(int i = 0; i < n_trees; i++) {
-        for(int j = 0; j < predict_len; j++) {
-            printf("%s ", tree_votes[i] + (j * offset));
-        }
-        printf("\n");
-    }
-    printf("\nEND DEBUG\n\n");
 
     return tree_votes;
 }
@@ -77,8 +67,7 @@ char **forest_predict(char **tree_votes, int n_trees, int predict_len) {
             // Set jth prediction to most common vote
             if(count > max_count) {
                 max_count = count;
-                // printf("%s\n", tree_votes[i] + (j * offset));
-                strcpy(predictions[j] + offset, tree_votes[i] + (j * offset));
+                strcpy(predictions[j], tree_votes[i] + (j * offset));
             }
         }
     }
