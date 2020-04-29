@@ -7,10 +7,11 @@
 
 char **train_and_vote(Dataset train_set, Dataset test_set, int n_trees, double sample_ratio) {
     // Allocate memory for output table
-    size_t offset = sizeof(char*) * STRING_SIZE;
-    char **tree_votes = malloc(sizeof(char**) * n_trees);
+    size_t offset = sizeof(char) * STRING_SIZE;
+    char **tree_votes = malloc(sizeof(char*) * n_trees);
+
     for(int i=0; i < n_trees; i++){
-        tree_votes[i] = malloc(sizeof(char*) * STRING_SIZE * test_set->rows);
+        tree_votes[i] = malloc(sizeof(char) * STRING_SIZE * test_set->rows);
     }
 
     // Iterate over n_trees and form n_trees votes
