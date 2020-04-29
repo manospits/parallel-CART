@@ -69,7 +69,7 @@ char **forest_predict(char **tree_votes, int n_trees, int predict_len) {
             int count = 0;
 
             for(int k = 0; k < n_trees; k++) {
-                if(tree_votes[i] + (j * offset) == tree_votes[k] + (j * offset)) {
+                if(strcmp(tree_votes[i] + (j * offset), tree_votes[k] + (j * offset)) == 0) {
                     count += 1;
                 }
             }
