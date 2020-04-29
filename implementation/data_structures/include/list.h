@@ -11,7 +11,8 @@ pnode cr_node(phead listh,void *data);
 void NO_DESTR(void *);
 
 //DESTROY
-void ds_list(phead ltodestroy);               //destroys list and free datatype
+void ds_list(phead ltodestroy);               //destroys list
+void ds_list_and_type(phead ltodestroy);
 
 void ds_node(phead listh,pnode ntodestroy);  //destroys a node
 

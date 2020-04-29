@@ -61,6 +61,20 @@ void ds_list(phead ltodestroy){
     free (ltodestroy);
 }
 
+void ds_list_and_type(phead ltodestroy){
+    if(ltodestroy==NULL){
+        return;
+    }
+    pnode todel;
+    pnode next=ltodestroy->front;
+    while(next!=NULL){
+        todel=next;
+        next=next->next;
+        ds_node(ltodestroy,todel);
+    }
+    free(ltodestroy->data_info);
+    free (ltodestroy);
+}
 
 void insert(phead listh,void *data){
     pnode nptr=cr_node(listh,data);

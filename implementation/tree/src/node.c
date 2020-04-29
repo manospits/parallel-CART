@@ -19,6 +19,8 @@ void del_node(Node node){
     }
     if(node->most_common)
         free(node->most_common);
+    if(node->split_val)
+        free(node->split_val);
     free(node);
 }
 void free_nodes(Node node){

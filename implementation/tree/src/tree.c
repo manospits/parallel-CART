@@ -41,7 +41,7 @@ double calc_gini_coefficient(Dataset dt, Attribute * class_attr) {
         iterator_i = next_node(iterator_i);
     }
 
-    ds_list(counts);
+    ds_list_and_type(counts);
 
     return imp;
 }
@@ -94,7 +94,7 @@ Tree build_classification_tree(Dataset train_dataset, char *class_field) {
     }
     Dataset subset = get_subset(train_dataset, rows_list);
     ds_list(rows_list);
-
+    free(int_type);
 
     //call recursive function to build tree
     clf_tree->root=grow_tree(clf_tree, subset);
@@ -133,6 +133,7 @@ void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset *
     *rightSubset = get_subset(subset, right);
     ds_list(left);
     ds_list(right);
+    free(int_type);
 }
 
 Node grow_tree(Tree clf_tree, Dataset subset){
@@ -154,7 +155,7 @@ Node grow_tree(Tree clf_tree, Dataset subset){
     }
     current->most_common = malloc(clf_tree->predict_attribute->size);
     memcpy(current->most_common, most_common, clf_tree->predict_attribute->size);
-    ds_list(counts);
+    ds_list_and_type(counts);
     double current_score = calc_gini_coefficient(current->subset, clf_tree->predict_attribute);
     /*printf("Gini is %f\n", current_score);*/
     double best_gain = 0.0;
@@ -202,7 +203,7 @@ Node grow_tree(Tree clf_tree, Dataset subset){
             }
             iterator_j = next_node(iterator_j);
         }
-        ds_list(unique_col_i_values);
+        ds_list_and_type(unique_col_i_values);
     }
     if (best_gain > 0){
         current->attr=best_attribute;
