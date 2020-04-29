@@ -18,12 +18,14 @@ void ds_node(phead listh,pnode ntodestroy);  //destroys a node
 
 //MODIFY
 void insert(phead listh,void *data);          //inserts node in front
+void insert_sorted(phead listh,void *data);          //inserts node in front
 void insert_back(phead listh,void *data);     //inserts node in back
 void delete(phead listh,void *data,void (*destr)(void*));  //deletes a node (CALL WITH NO_DESTR if you dont want to free the datatype)
 int pop_back(phead listh,void (*destr)(void*));
 //ACCESS
 int in(phead listh,void *data);               //checks if there is an element in the list
 int in_and_update(phead listh,void *data, void (*modifier)(void *));               //checks if there is an element in the list
+int in_and_update_sorted(phead listh,void *data, void (*modifier)(void *));
 
 int get_size(phead listh);                    //get number of elements
 void* ret_data(const pnode nd);               //returns a ptr to data

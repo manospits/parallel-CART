@@ -72,7 +72,7 @@ char * predict_row(Tree clf_tree, char * row){
     return traverse(clf_tree, clf_tree->root, row);
 }
 
-Tree build_classification_tree(Dataset train_dataset, char *class_field) {
+Tree build_classification_tree(Dataset train_dataset, char *class_field, int max_height) {
     Tree clf_tree = create_tree(train_dataset, class_field);
     Attribute *class_attr;
     for(int i=0;i< train_dataset->attributes_number; i++){
@@ -82,10 +82,6 @@ Tree build_classification_tree(Dataset train_dataset, char *class_field) {
     }
     clf_tree->predict_attribute=class_attr;
     strcpy(clf_tree->predict_field, class_field);
-    /*double gini_imp;*/
-    /*gini_imp = calc_gini_coefficient(train_dataset, class_attr);*/
-    /*printf("Gini is %f\n", gini_imp);*/
-
     //start with all training data instances
     pel_info int_type = create_type(sizeof(int), &intcmp, &free );
     phead rows_list=cr_list(int_type);
@@ -97,7 +93,7 @@ Tree build_classification_tree(Dataset train_dataset, char *class_field) {
     free(int_type);
 
     //call recursive function to build tree
-    clf_tree->root=grow_tree(clf_tree, subset);
+    clf_tree->root=grow_tree(clf_tree, subset, 0, max_height);
     /*printf("%s\n", predict_row(clf_tree, train_dataset->data[0]));*/
     return clf_tree;
 }
@@ -136,8 +132,9 @@ void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset *
     free(int_type);
 }
 
-Node grow_tree(Tree clf_tree, Dataset subset){
+Node grow_tree(Tree clf_tree, Dataset subset, int current_height, int max_height){
     if(subset->rows == 0) return NULL;
+    if (current_height>max_height ) return NULL;
     Node current=create_node();
     current->subset = subset;
 
@@ -157,7 +154,7 @@ Node grow_tree(Tree clf_tree, Dataset subset){
     memcpy(current->most_common, most_common, clf_tree->predict_attribute->size);
     ds_list_and_type(counts);
     double current_score = calc_gini_coefficient(current->subset, clf_tree->predict_attribute);
-    /*printf("Gini is %f\n", current_score);*/
+    printf("Gini is %f\n", current_score);
     double best_gain = 0.0;
     Attribute * best_attribute;
     Dataset best_set_left=NULL;
@@ -169,7 +166,6 @@ Node grow_tree(Tree clf_tree, Dataset subset){
 
         unique_col_i_values = unique_values(current->subset, &(current->subset->attributes[i]));
         iterator_j = get_list(unique_col_i_values);
-
         for(int j = 0; j < get_size(unique_col_i_values); j++){
             Dataset tmp_left;
             Dataset tmp_right;
@@ -208,8 +204,8 @@ Node grow_tree(Tree clf_tree, Dataset subset){
     if (best_gain > 0){
         current->attr=best_attribute;
         /*printf("Best gain is: %f best attribute: %s right size: %d left size: %d\n", best_gain, best_attribute->name, best_set_right->rows, best_set_left->rows);*/
-        current->right = grow_tree(clf_tree, best_set_right);
-        current->left = grow_tree(clf_tree, best_set_left);
+        current->right = grow_tree(clf_tree, best_set_right, current_height+1, max_height);
+        current->left = grow_tree(clf_tree, best_set_left, current_height+1, max_height);
     }
     return current;
 }

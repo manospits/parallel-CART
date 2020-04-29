@@ -5,7 +5,7 @@
 #include "../../tree/include/tree.h"
 #include "../include/sampling.h"
 
-char **train_and_vote(Dataset train_set, Dataset test_set, int n_trees, double sample_ratio, char * class_field) {
+char **train_and_vote(Dataset train_set, Dataset test_set, int n_trees, double sample_ratio, char * class_field, int max_height) {
     // Allocate memory for output table
     size_t offset = sizeof(char) * STRING_SIZE;
     char **tree_votes = malloc(sizeof(char*) * n_trees);
@@ -21,7 +21,7 @@ char **train_and_vote(Dataset train_set, Dataset test_set, int n_trees, double s
         printf("Finito %d\n", train_subset->rows);
 
         printf("Watering tree...\n");
-        Tree clf_tree = build_classification_tree(train_subset, class_field);
+        Tree clf_tree = build_classification_tree(train_subset, class_field, max_height);
         printf("Tree grew up...\n");
 
         printf("Gathering seeds...\n");

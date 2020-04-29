@@ -199,7 +199,7 @@ phead unique_values(Dataset dt, Attribute * attribute){
                 continue;
             }
             else{
-                insert(values_list, value);
+                insert_sorted(values_list, value);
             }
         }
     }else{
@@ -211,7 +211,7 @@ phead unique_values(Dataset dt, Attribute * attribute){
                 continue;
             }
             else{
-                insert(values_list, &value);
+                insert_sorted(values_list, &value);
             }
         }
     }
@@ -229,11 +229,11 @@ phead unique_counts(Dataset dt, Attribute * attribute){
             value_count tmp_vlc;
             tmp_vlc.value=value;
             tmp_vlc.count=1;
-            if(in_and_update(labels_list, &tmp_vlc, &modifier)){
+            if(in_and_update_sorted(labels_list, &tmp_vlc, &modifier)){
                 continue;
             }
             else{
-                insert(labels_list, &tmp_vlc);
+                insert_sorted(labels_list, &tmp_vlc);
             }
         }
     }
