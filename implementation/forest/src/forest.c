@@ -12,7 +12,7 @@ char **train_and_vote(Dataset train_set, Dataset test_set, int n_trees, double s
     for(int i=0; i < n_trees; i++){
         tree_votes[i] = malloc(sizeof(char*) * STRING_SIZE * test_set->rows);
     }
-
+    
     // Iterate over n_trees and form n_trees votes
     for(int i = 0; i < n_trees; i++) {
         printf("Creating randomly sampled subset...\n");
