@@ -39,11 +39,49 @@ char **train_and_vote(Dataset dataset, int n_trees, double sample_ratio) {
         printf("\n\n");
     }
 
+
+    printf("\n\nDEBUG\n");
+    for(int i = 0; i < n_trees; i++) {
+        for(int j = 0; j < predict_len; j++) {
+            printf("%s ", tree_votes[i] + (j * offset));
+        }
+        printf("\n");
+    }
+    printf("\nEND DEBUG\n\n");
+
     return tree_votes;
 }
 
-char *forest_prediction(char **tree_votes, int n_trees) {
-    char *lel = "l";
+char **forest_predict(char **tree_votes, int n_trees, int predict_len) {
+    // Allocate memory for votes
+    size_t offset = sizeof(char*) * STRING_SIZE;
+    char **predictions = malloc(sizeof(char*) * predict_len);
+    for(int i = 0; i < predict_len; i++) {
+        predictions[i] = malloc(sizeof(char) * STRING_SIZE);
+    }
 
-    return lel;
+    // Iterate each predicted class
+    for(int j = 0; j < predict_len; j++) {
+        // Iterate each trees prediction and find most common
+        int max_count = 0;
+
+        for(int i = 0; i < n_trees; i++) {
+            int count = 0;
+
+            for(int k = 0; k < n_trees; k++) {
+                if(tree_votes[i] + (j * offset) == tree_votes[k] + (j * offset)) {
+                    count += 1;
+                }
+            }
+
+            // Set jth prediction to most common vote
+            if(count > max_count) {
+                max_count = count;
+                // printf("%s\n", tree_votes[i] + (j * offset));
+                strcpy(predictions[j] + offset, tree_votes[i] + (j * offset));
+            }
+        }
+    }
+
+    return predictions;
 }
