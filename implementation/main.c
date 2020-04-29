@@ -39,7 +39,7 @@ int main(void){
 
     printf("Cleaning up...\n");
     free_predictions(tree_votes, n_trees);
-    free_predictions(forest_predictions, n_trees);
+    free_predictions(forest_predictions, test_set->rows);
     free_subset_dataset(train_set);
     free_subset_dataset(test_set);
     free_dataset(dt);
