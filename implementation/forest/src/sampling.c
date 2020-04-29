@@ -30,6 +30,7 @@ phead sample_indexes(int n_data, int n_samples, int rank) {
     }
 
     free(temp_indexes);
+    free(int_type);
     return indexes;
 }
 
@@ -40,5 +41,6 @@ Dataset create_random_subset(Dataset dataset, int n_data, double sample_ratio, i
     indexes = sample_indexes(n_data, n_samples, rank);
     Dataset subset = get_subset(dataset, indexes);
 
+    // ds_list(indexes); // Causes seg fault, without causes mem leak
     return subset;
 }
