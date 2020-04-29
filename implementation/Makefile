@@ -1,5 +1,4 @@
 OBJS   = main.o tree.o node.o forest.o sampling.o io.o list.o element.o
-F_OBJS = forest_main.o tree.o node.o forest.o sampling.o io.o list.o element.o
 OUT    = cart
 CC     = gcc
 FLAGS  = -g -c -Wall
@@ -8,14 +7,7 @@ ALL: $(OUT)
 $(OUT): $(OBJS)
 	$(CC) -g $(OBJS) -o $@
 
-fall: $(OUT)
-$(OUT): $(F_OBJS)
-	$(CC) -g $(F_OBJS) -o $@
-
 main.o: main.c
-	$(CC) $(FLAGS) $?
-
-forest_main.o: forest_main.c
 	$(CC) $(FLAGS) $?
 
 tree.o: tree/src/tree.c

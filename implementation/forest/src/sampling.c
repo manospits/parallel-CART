@@ -29,6 +29,7 @@ phead sample_indexes(int n_data, int n_samples, int rank) {
         insert(indexes, &temp_indexes[i]);
     }
 
+    free(temp_indexes);
     return indexes;
 }
 

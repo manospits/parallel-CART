@@ -74,3 +74,11 @@ char **forest_predict(char **tree_votes, int n_trees, int predict_len) {
 
     return predictions;
 }
+
+void free_predictions(char **predictions, int n_trees) {
+    for(int i = 0; i < n_trees; i++) {
+        free(predictions[i]);
+    }
+
+    free(predictions);
+}

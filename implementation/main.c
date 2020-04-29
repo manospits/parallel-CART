@@ -1,23 +1,37 @@
 #include <stdio.h>
 
 #include "io/include/io.h"
-#include "tree/include/tree.h"
+#include "forest/include/forest.h"
 
 int main(void){
+    // Settings
     char *s="species";
     char **b=&s;
+    int n_trees = 4;
+    double sample_ratio = 0.8;
+
+    // Allocate memory
+    Dataset dt;
+    char **tree_votes;
+    char **forest_predictions;
+
     printf("Reading dataset...\n");
-    Dataset dt = read_dataset("./toy_data.csv",",",1,b,1);
+    dt = read_dataset("./toy_data.csv",",",1,b,1);
 
-    printf("Watering tree...\n");
-    Tree clf_tree = build_classification_tree(dt, "species");
-    printf("Tree grew up...\n");
+    printf("Training forest and collecting votes...\n");
+    tree_votes = train_and_vote(dt, n_trees, sample_ratio);
 
-    printf("Gathering a seed...\n");
-    printf("%s\n", predict_row(clf_tree, dt->data[0]));
+    printf("Amalgamating votes...\n");
+    forest_predictions = forest_predict(tree_votes, n_trees, 5);
 
-    printf("Chopping the tree :\\\n");
-    del_tree(clf_tree);
+    printf("Forest votes...\n");
+    for(int i = 0; i < 5; i++) {
+        printf("%d: %s\n", i, forest_predictions[i]);
+    }
+
+    printf("Cleaning up...\n");
+    free_predictions(tree_votes, n_trees);
+    free_predictions(forest_predictions, n_trees);
     free_dataset(dt);
     return 0;
 }
