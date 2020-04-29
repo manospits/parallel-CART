@@ -6,7 +6,7 @@
 #define ATTRIBUTE_LEN 32
 #define STRING_SIZE 64
 #define DATA_ARRAY_INITIAL_SIZE 128
-
+#define LINE_READ 8192
 
 typedef struct Attribute{
     char name[ATTRIBUTE_LEN];               //name of the field

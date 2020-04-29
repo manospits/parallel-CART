@@ -15,7 +15,7 @@ void initialize_attribute(Attribute * attr, char * name, size_t size, int (*cmp)
 Dataset read_dataset(const char * path, const char * sep, int header, char ** string_fields, int cs){
     Dataset tmp_dt;
     FILE * dataset_fp;
-    char buff[255];
+    char buff[LINE_READ];
     int line_num=0;
     char *ptr;
     int num_of_attributes=0;
@@ -26,15 +26,15 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
 
     tmp_dt = malloc(sizeof(Dataset_));
 
-    while(fgets(buff, 255, dataset_fp)){
+    while(fgets(buff, LINE_READ, dataset_fp)){
         //remove newline
         size_t ln = strlen(buff) - 1;
         if (*buff && buff[ln] == '\n')
             buff[ln] = '\0';
-
+        /*printf("%s\n", buff);*/
         //get attributes from header and store them
         if(header && line_num==0){
-            char buff_tmp[255];
+            char buff_tmp[LINE_READ];
 
             strcpy(buff_tmp, buff);
             ptr = strtok(buff, sep);
