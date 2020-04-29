@@ -1,4 +1,4 @@
-#include <stdio.h> 
+#include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
 #include "../../data_structures/include/list.h"
@@ -16,8 +16,8 @@ phead sample_indexes(int n_data, int n_samples, int rank) {
 
     // Randomly choose and replace indexes
     for(i = n_samples; i < n_data; i++) {
-        int j = rand() % (i + 1); 
-  
+        int j = rand() % (i + 1);
+
         if (j < n_samples) {
             temp_indexes[j] = i;
         }
@@ -30,7 +30,6 @@ phead sample_indexes(int n_data, int n_samples, int rank) {
     }
 
     free(temp_indexes);
-    free(int_type);
     return indexes;
 }
 
@@ -41,6 +40,6 @@ Dataset create_random_subset(Dataset dataset, int n_data, double sample_ratio, i
     indexes = sample_indexes(n_data, n_samples, rank);
     Dataset subset = get_subset(dataset, indexes);
 
-    // ds_list(indexes); // Causes seg fault, without causes mem leak
+    ds_list_and_type(indexes);
     return subset;
 }
