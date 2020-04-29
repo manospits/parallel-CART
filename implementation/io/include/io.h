@@ -74,4 +74,7 @@ int in_array(char *string, char **array, int s);
 Dataset get_subset(Dataset dt, phead rows);
 phead unique_values(Dataset dt, Attribute * attribute);
 phead unique_counts(Dataset dt, Attribute * attribute);
+
+void train_test_split(Dataset dataset, Dataset *train_set, Dataset *test_set, double test_train_ratio);
+
 #endif

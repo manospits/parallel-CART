@@ -242,3 +242,26 @@ phead unique_counts(Dataset dt, Attribute * attribute){
     }
     return labels_list;
 }
+
+void train_test_split(Dataset dataset, Dataset *train_set, Dataset *test_set, double test_train_ratio) {
+    int split_row = dataset->rows * test_train_ratio;
+    phead train_subset, test_subset;
+
+    pel_info int_type = create_type(sizeof(int), &intcmp, &free );
+    train_subset = cr_list(int_type);
+    test_subset = cr_list(int_type);
+
+    for(int i = 0; i < dataset->rows; i++) {
+        if(i < split_row) {
+            insert(train_subset, &i);
+        } else {
+            insert(test_subset, &i);
+        }
+    }
+
+    *train_set = get_subset(dataset, train_subset);
+    *test_set = get_subset(dataset, test_subset);
+    ds_list(train_subset);
+    ds_list(test_subset);
+    free(int_type);
+}
