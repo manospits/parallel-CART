@@ -27,7 +27,7 @@ int main(void){
     printf("Data %d test %d train %d\n", dt->rows, test_set->rows, train_set->rows);
 
     printf("Training forest and collecting votes...\n");
-    tree_votes = train_and_vote(dt, n_trees, sample_ratio);
+    tree_votes = train_and_vote(train_set, test_set, n_trees, sample_ratio);
 
     printf("Amalgamating votes...\n");
     forest_predictions = forest_predict(tree_votes, n_trees, test_set->rows);
