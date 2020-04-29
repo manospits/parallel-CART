@@ -40,7 +40,7 @@ char **train_and_vote(Dataset train_set, Dataset test_set, int n_trees, double s
 
 char **forest_predict(char **tree_votes, int n_trees, int predict_len) {
     // Allocate memory for votes
-    size_t offset = sizeof(char*) * STRING_SIZE;
+    size_t offset = sizeof(char) * STRING_SIZE;
     char **predictions = malloc(sizeof(char*) * predict_len);
     for(int i = 0; i < predict_len; i++) {
         predictions[i] = malloc(sizeof(char) * STRING_SIZE);
