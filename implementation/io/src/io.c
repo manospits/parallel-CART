@@ -144,7 +144,16 @@ char ** get_row(Dataset dt, int row){
 }
 
 char * get_element(Dataset dt, int row, int col){
-    return &dt->data[row][col];
+    return dt->data[row]+dt->attributes[col].offset;
+}
+
+char * get_element_by_col_name(Dataset dt, int row, char* name){
+    for (int i = 0; i< dt->attributes_number;i++){
+        if(strcmp(dt->attributes[i].name,name)==0)
+            return dt->data[row]+dt->attributes[i].offset;
+
+    }
+    return NULL;
 }
 
 int in_array(char *string, char **array, int s){

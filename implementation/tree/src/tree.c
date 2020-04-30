@@ -190,7 +190,6 @@ Node grow_tree(Tree clf_tree, Dataset subset, int current_height, int max_height
     for (int i=0; i < current->subset->attributes_number; i++){
         /*printf("%d/%d\n",i,current->subset->attributes_number);*/
         if(!strcmp(subset->attributes[i].name, clf_tree->predict_field)) continue;
-
         Dataset sorted_i = get_sorted_version(current->subset,i);
         int j = sorted_i->rows-1;
         /*puts("------------------------------------------------------");*/
@@ -217,7 +216,7 @@ Node grow_tree(Tree clf_tree, Dataset subset, int current_height, int max_height
             double p = (double) len_right / (double) current->subset->rows;
             double gain = current_score - p*calc_gini_coefficient_between(sorted_i, clf_tree->predict_attribute,j,sorted_i->rows) -
                 (1-p)*calc_gini_coefficient_between(sorted_i, clf_tree->predict_attribute, 0, j);
-
+            /*printf("-------------Gini calc----------\n");*/
             if(gain >  best_gain && len_right > 0 & len_left >0){
                 best_gain=gain;
                 best_attribute = &(subset->attributes[i]);
