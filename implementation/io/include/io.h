@@ -70,10 +70,15 @@ int in_array(char *string, char **array, int s);
 /*
  * checks if string is in array (0 False)
  */
+Dataset get_sorted_version(Dataset dt, int attribute_index);
+
+void dtquicksort(Dataset dt, int ai, int first, int last);
 
 Dataset get_subset(Dataset dt, phead rows);
 phead unique_values(Dataset dt, Attribute * attribute);
 phead unique_counts(Dataset dt, Attribute * attribute);
+
+phead unique_counts_between(Dataset dt, Attribute * attribute, int s, int e);
 
 void train_test_split(Dataset dataset, Dataset *train_set, Dataset *test_set, double test_train_ratio);
 

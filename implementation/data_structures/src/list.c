@@ -89,6 +89,43 @@ void insert(phead listh,void *data){
         listh->size++;
     }
 }
+void not_in_insert_sorted(phead listh, void *data){
+    pnode nptr=cr_node(listh, data);
+    if(listh->size==0){
+        listh->end=nptr;
+        listh->front=nptr;
+        listh->size++;
+    }
+    else{
+        int res=0;
+        if((res=type_cmp(listh->data_info, nptr->data, listh->front->data))<=0){
+            if(res == 0){
+                ds_node(listh,nptr);
+                return;
+            }
+            nptr->next=listh->front;
+            listh->front=nptr;
+        }
+        else{
+            pnode tmp=listh->front;
+            pnode prev=NULL;
+            while(tmp && (res=type_cmp(listh->data_info,nptr->data,tmp->data))>=0){
+                if(res == 0){
+                    ds_node(listh,nptr);
+                    return;
+                }
+                prev=tmp;
+                tmp=tmp->next;
+            }
+            if(tmp==NULL){
+                listh->end=nptr;
+            }
+            nptr->next=prev->next;
+            prev->next=nptr;
+        }
+        listh->size++;
+    }
+}
 
 void insert_sorted(phead listh, void *data){
     pnode nptr=cr_node(listh, data);
@@ -251,6 +288,25 @@ int in(phead listh,void *data){
     type_destr(listh->data_info,a);
     return 0;
 }
+
+int in_sorted(phead listh,void *data){
+    pnode tmp=listh->front;
+    pel a=create_elem(listh->data_info,data);
+    while(tmp!=NULL){
+        if(type_cmp(listh->data_info,a,tmp->data)==0){
+            type_destr(listh->data_info,a);
+            return 1;
+        }
+        if(type_cmp(listh->data_info, a, tmp->data)<0){
+            type_destr(listh->data_info,a);
+            return 0;
+        }
+        tmp=tmp->next;
+    }
+    type_destr(listh->data_info,a);
+    return 0;
+}
+
 
 int in_and_update(phead listh,void *data, void (*modifier)(void *)){
     pnode tmp=listh->front;

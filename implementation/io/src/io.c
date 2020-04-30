@@ -108,13 +108,13 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
         }
     }
     /*for(int i = 0; i < tmp_dt->rows; i++){*/
-        /*for (int j =0; j < tmp_dt->attributes_number; j++){*/
-            /*if(tmp_dt->attributes[j].dtype=='s')*/
-                /*printf("%s ", tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
-             /*if(tmp_dt->attributes[j].dtype=='d')*/
-                /*printf("%f ",*(double*)(tmp_dt->data[i]+tmp_dt->attributes[j].offset));*/
-        /*}*/
-        /*printf("\n");*/
+    /*for (int j =0; j < tmp_dt->attributes_number; j++){*/
+    /*if(tmp_dt->attributes[j].dtype=='s')*/
+    /*printf("%s ", tmp_dt->data[i]+tmp_dt->attributes[j].offset);*/
+    /*if(tmp_dt->attributes[j].dtype=='d')*/
+    /*printf("%f ",*(double*)(tmp_dt->data[i]+tmp_dt->attributes[j].offset));*/
+    /*}*/
+    /*printf("\n");*/
     /*}*/
     fclose(dataset_fp);
     return tmp_dt;
@@ -195,24 +195,15 @@ phead unique_values(Dataset dt, Attribute * attribute){
         values_list=cr_list(string_type);
         for (int i  = 0; i < dt->rows ; i++){
             char * value = dt->data[i]+attribute->offset;
-            if(in(values_list, value)){
-                continue;
-            }
-            else{
-                insert_sorted(values_list, value);
-            }
+            not_in_insert_sorted(values_list, &value);
         }
-    }else{
+    }
+    else{
         pel_info double_type = create_type(sizeof(double), &double_cmp, &free);
         values_list=cr_list(double_type);
         for (int i  = 0; i < dt->rows ; i++){
             double value = * (double *) (dt->data[i]+attribute->offset);
-            if(in(values_list, &value)){
-                continue;
-            }
-            else{
-                insert_sorted(values_list, &value);
-            }
+            not_in_insert_sorted(values_list, &value);
         }
     }
     return values_list;
@@ -229,11 +220,11 @@ phead unique_counts(Dataset dt, Attribute * attribute){
             value_count tmp_vlc;
             tmp_vlc.value=value;
             tmp_vlc.count=1;
-            if(in_and_update_sorted(labels_list, &tmp_vlc, &modifier)){
+            if(in_and_update(labels_list, &tmp_vlc, &modifier)){
                 continue;
             }
             else{
-                insert_sorted(labels_list, &tmp_vlc);
+                insert(labels_list, &tmp_vlc);
             }
         }
     }
@@ -241,6 +232,94 @@ phead unique_counts(Dataset dt, Attribute * attribute){
         printf("Error....");
     }
     return labels_list;
+}
+
+phead unique_counts_between(Dataset dt, Attribute * attribute, int s, int e){
+    phead labels_list;
+    pel_info string_type = create_type(sizeof(value_count), &vlccmp, &free);
+    labels_list=cr_list(string_type);
+
+    if(attribute->dtype == 's'){
+        for (int i  = s; i < e ; i++){
+            char * value = dt->data[i]+attribute->offset;
+            value_count tmp_vlc;
+            tmp_vlc.value=value;
+            tmp_vlc.count=1;
+            if(in_and_update(labels_list, &tmp_vlc, &modifier)){
+                continue;
+            }
+            else{
+                insert(labels_list, &tmp_vlc);
+            }
+        }
+    }
+    else{
+        printf("Error....");
+    }
+    return labels_list;
+}
+
+Dataset get_sorted_version(Dataset dt, int attribute_index){
+    int rows_size=dt->rows;
+    Dataset tmp_dt;
+
+    tmp_dt = malloc(sizeof(Dataset_));
+    tmp_dt->attributes=dt->attributes;
+    tmp_dt->attributes_number = dt->attributes_number;
+    tmp_dt->row_size = dt->row_size;
+    tmp_dt->rows=rows_size;
+    tmp_dt->data = malloc(sizeof(char**)*tmp_dt->rows);
+
+
+    for(int i=0; i<rows_size; i++ ){
+        tmp_dt->data[i]=dt->data[i];
+    }
+    dtquicksort(tmp_dt, attribute_index, 0, rows_size-1);
+    return tmp_dt;
+}
+
+void dtquicksort(Dataset dt, int ai, int first, int last){
+    /*printf("%d %d\n", first,last);*/
+    int i, j, pivot;
+    char *temp;
+
+    if(first<last){
+        pivot=first;
+        i=first;
+        j=last;
+
+        while(i<j){
+            /*printf("%d %d\n", i, j );*/
+            if(dt->attributes[ai].dtype=='s'){
+                while(dt->attributes[ai].cmp(dt->data[i]+dt->attributes[ai].offset,dt->data[pivot]+dt->attributes[ai].offset )<= 0 && i<last){
+                    i++;
+                }
+                while(dt->attributes[ai].cmp(dt->data[j]+dt->attributes[ai].offset,dt->data[pivot]+dt->attributes[ai].offset )> 0){
+                    j--;
+                }
+            }
+            if(dt->attributes[ai].dtype=='d'){
+                while(dt->attributes[ai].cmp((double *)(dt->data[i]+dt->attributes[ai].offset),(double *)(dt->data[pivot]+dt->attributes[ai].offset))<= 0 && i<last){
+                    i++;
+                }
+                while(dt->attributes[ai].cmp((double *)(dt->data[j]+dt->attributes[ai].offset),(double *)(dt->data[pivot]+dt->attributes[ai].offset)) > 0){
+                    j--;
+                }
+            }
+            if(i<j){
+                temp=dt->data[i];
+                dt->data[i]=dt->data[j];
+                dt->data[j]=temp;
+            }
+        }
+
+        temp=dt->data[pivot];
+        dt->data[pivot]=dt->data[j];
+        dt->data[j]=temp;
+        dtquicksort(dt,ai,first,j-1);
+        dtquicksort(dt,ai,j+1,last);
+
+    }
 }
 
 void train_test_split(Dataset dataset, Dataset *train_set, Dataset *test_set, double test_train_ratio) {

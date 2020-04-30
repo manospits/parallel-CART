@@ -46,6 +46,32 @@ double calc_gini_coefficient(Dataset dt, Attribute * class_attr) {
     return imp;
 }
 
+double calc_gini_coefficient_between(Dataset dt, Attribute * class_attr, int s, int e) {
+    int total = dt -> rows;
+    double imp=0.0;
+
+    phead counts=unique_counts_between(dt, class_attr, s, e);
+    pnode iterator_i = get_list(counts);
+    for(int i=0; i<get_size(counts); i++ ){
+        value_count * label_count_i = ((value_count *) ret_data(iterator_i));
+        double p1 = (double) label_count_i->count/(double) total;
+        pnode iterator_j = get_list(counts);
+        for(int j=0; j<get_size(counts); j++ ){
+            value_count * label_count_j = ((value_count *) ret_data(iterator_j));
+            if(strcmp(label_count_i->value, label_count_j->value)){
+                double p2 = (double) label_count_j->count/ (double) total;
+                imp += p1*p2;
+            }
+            iterator_j = next_node(iterator_j);
+        }
+        iterator_i = next_node(iterator_i);
+    }
+
+    ds_list_and_type(counts);
+
+    return imp;
+}
+
 char * traverse(Tree clf_tree, Node current, char * row){
     int res;
 
@@ -60,7 +86,7 @@ char * traverse(Tree clf_tree, Node current, char * row){
     else{
         double row_val= *(double *) (row+current->attr->offset);
         double split_val= *(double *) (current->split_val);
-        res = current->attr->cmp(&split_val, &row_val);
+        res = current->attr->cmp( &row_val, &split_val);
     }
     if(res>=0)
         return traverse(clf_tree, current->right, row);
@@ -108,17 +134,17 @@ void divide_dataset(Dataset subset, int attribute_index, void * value, Dataset *
     for(int i = 0; i < subset->rows; i++){
         if (subset->attributes[attribute_index].dtype=='s'){
             char * value2 = subset->data[i]+subset->attributes[attribute_index].offset;
-            if((subset->attributes[attribute_index].cmp(value, value2))>=0)
+            if(subset->attributes[attribute_index].cmp(&value2 , value )>=0)
                 insert(right, &i);
             else
                 insert(left, &i);
 
         }
         else{
-            double value1 = *(double *) value;
+            double value1 = *(double *) (value);
             double value2 = *(double *) (subset->data[i]+subset->attributes[attribute_index].offset);
-            /*printf("---- %f---\n", value2);*/
-            if((subset->attributes[attribute_index].cmp(&value1, &value2 ))>=0)
+            /*printf("---- %f - %f---\n", value1, value2);*/
+            if(subset->attributes[attribute_index].cmp(&value2 , &value1 )>=0)
                 insert(right, &i);
             else
                 insert(left, &i);
@@ -154,58 +180,72 @@ Node grow_tree(Tree clf_tree, Dataset subset, int current_height, int max_height
     memcpy(current->most_common, most_common, clf_tree->predict_attribute->size);
     ds_list_and_type(counts);
     double current_score = calc_gini_coefficient(current->subset, clf_tree->predict_attribute);
-    printf("Gini is %f\n", current_score);
+    /*printf("Gini is %f\n", current_score);*/
     double best_gain = 0.0;
     Attribute * best_attribute;
-    Dataset best_set_left=NULL;
-    Dataset best_set_right=NULL;
-    phead unique_col_i_values;
-    pnode iterator_j;
+    int best_attribute_i;
+
+    /*phead unique_col_i_values;*/
+    /*pnode iterator_j;*/
     for (int i=0; i < current->subset->attributes_number; i++){
+        /*printf("%d/%d\n",i,current->subset->attributes_number);*/
         if(!strcmp(subset->attributes[i].name, clf_tree->predict_field)) continue;
 
-        unique_col_i_values = unique_values(current->subset, &(current->subset->attributes[i]));
-        iterator_j = get_list(unique_col_i_values);
-        for(int j = 0; j < get_size(unique_col_i_values); j++){
-            Dataset tmp_left;
-            Dataset tmp_right;
-            divide_dataset(current->subset, i, ret_data(iterator_j), &tmp_left, &tmp_right);
-            int len_right = tmp_right->rows;
-            int len_left = tmp_left->rows;
-            double p = (double) len_right / (double) current->subset->rows;
-            double gain = current_score - p*calc_gini_coefficient(tmp_right, clf_tree->predict_attribute) - (1-p)*calc_gini_coefficient(tmp_left, clf_tree->predict_attribute);
-            /*printf("Gain is: %f\n", gain);*/
-            /*printf("value: %f\n", *(double *)ret_data(iterator_j));*/
-            /*printf("right %d left %d\n", len_right, len_left);*/
-            if(gain >  best_gain && len_right > 0 & len_left >0){
-                if(best_set_left && best_set_right){
-                    free_subset_dataset(best_set_left);
-                    free_subset_dataset(best_set_right);
+        Dataset sorted_i = get_sorted_version(current->subset,i);
+        int j = sorted_i->rows-1;
+        /*puts("------------------------------------------------------");*/
+        while(j >=0){
+            /*printf("%f\n",*(double *)(sorted_i->data[j]+sorted_i->attributes[i].offset));*/
+            if(sorted_i->attributes[i].dtype=='d' && j-1>=0){
+                double val1=*(double*) (sorted_i->data[j]+sorted_i->attributes[i].offset);
+                double val2=*(double*) (sorted_i->data[j-1]+sorted_i->attributes[i].offset);
+                if(sorted_i->attributes[i].cmp(&val1, &val2)==0){
+                    j--;
+                    continue;
                 }
+            }
+            if(sorted_i->attributes[i].dtype=='s' && j-1>=0){
+                char *val1 = sorted_i->data[j]+sorted_i->attributes[i].offset;
+                char *val2 =sorted_i->data[j-1]+sorted_i->attributes[i].offset;
+                if(sorted_i->attributes[i].cmp(val1,val2)==0){
+                    j--;
+                    continue;
+                }
+            }
+            int len_right = sorted_i->rows-j;
+            int len_left = j;
+            double p = (double) len_right / (double) current->subset->rows;
+            double gain = current_score - p*calc_gini_coefficient_between(sorted_i, clf_tree->predict_attribute,j,sorted_i->rows) -
+                (1-p)*calc_gini_coefficient_between(sorted_i, clf_tree->predict_attribute, 0, j);
+
+            if(gain >  best_gain && len_right > 0 & len_left >0){
                 best_gain=gain;
-                best_set_left = tmp_left;
-                best_set_right = tmp_right;
                 best_attribute = &(subset->attributes[i]);
+                best_attribute_i =i;
                 if(current->split_val)
                     free(current->split_val);
                 current->split_val = malloc(current->subset->attributes[i].size);
-                memcpy(current->split_val,ret_data(iterator_j),current->subset->attributes[i].size);
-                /*double tmp = *(double *) ret_data(iterator_j);//current->split_val;*/
-                /*printf("--------------------%s %f\n",best_attribute->name, tmp);*/
+                memcpy(current->split_val, sorted_i->data[j]+sorted_i->attributes[i].offset,current->subset->attributes[i].size);
+                /*printf("%d %d %f\n",len_left, len_right, *(double*)(current->split_val));*/
             }
-            else{
-                free_subset_dataset(tmp_left);
-                free_subset_dataset(tmp_right);
-            }
-            iterator_j = next_node(iterator_j);
+            j--;
         }
-        ds_list_and_type(unique_col_i_values);
+        free_subset_dataset(sorted_i);
     }
     if (best_gain > 0){
-        current->attr=best_attribute;
-        /*printf("Best gain is: %f best attribute: %s right size: %d left size: %d\n", best_gain, best_attribute->name, best_set_right->rows, best_set_left->rows);*/
-        current->right = grow_tree(clf_tree, best_set_right, current_height+1, max_height);
-        current->left = grow_tree(clf_tree, best_set_left, current_height+1, max_height);
+        if(current_height + 1> max_height){
+            free(current->split_val);
+            current->split_val=NULL;
+        }
+        else{
+            current->attr=best_attribute;
+            Dataset best_set_left, best_set_right;
+            divide_dataset(current->subset, best_attribute_i ,current->split_val, &best_set_left, &best_set_right);
+            /*printf("%f\n",*(double *)(current->split_val));*/
+            /*printf("Height is: %d best gain is: %f best attribute: %s right size: %d left size: %d\n",current_height, best_gain, best_attribute->name, best_set_right->rows, best_set_left->rows);*/
+            current->right = grow_tree(clf_tree, best_set_right, current_height+1, max_height);
+            current->left = grow_tree(clf_tree, best_set_left, current_height+1, max_height);
+        }
     }
     return current;
 }
