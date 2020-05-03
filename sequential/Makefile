@@ -1,7 +1,7 @@
 OBJS   = main.o tree.o node.o forest.o sampling.o io.o list.o element.o
 OUT    = cart
-CC     = gcc
-FLAGS  = -g -c -Wall
+CC     = icc
+FLAGS  = -g -c -Wall -std=c99
 
 ALL: $(OUT) 
 $(OUT): $(OBJS)
