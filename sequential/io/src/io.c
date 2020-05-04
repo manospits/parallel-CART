@@ -67,7 +67,7 @@ Dataset read_dataset(const char * path, const char * sep, int header, char ** st
             }
             tmp_dt->row_size=offset;
             //ALLOCATE MEMORY FOR DATA
-            tmp_dt->data = malloc(sizeof(char**)*DATA_ARRAY_INITIAL_SIZE);
+            tmp_dt->data = malloc(sizeof(char*)*DATA_ARRAY_INITIAL_SIZE);
             for(int i=0; i < DATA_ARRAY_INITIAL_SIZE; i++){
                 tmp_dt->data[i]=malloc(tmp_dt->row_size);
             }
