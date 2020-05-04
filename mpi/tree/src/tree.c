@@ -26,7 +26,6 @@ double calc_gini_coefficient(Dataset dt, Attribute * class_attr) {
 
     phead counts=unique_counts(dt, class_attr);
     pnode iterator_i = get_list(counts);
-
     for(int i=0; i<get_size(counts); i++ ){
         value_count * label_count_i = ((value_count *) ret_data(iterator_i));
         double p1 = (double) label_count_i->count/(double) total;
@@ -112,8 +111,6 @@ Tree build_classification_tree(Dataset train_dataset, char *class_field, int max
     //start with all training data instances
     pel_info int_type = create_type(sizeof(int), &intcmp, &free );
     phead rows_list=cr_list(int_type);
-
-    #pragma omp parallel for
     for(int i = 0; i < train_dataset->rows; i++){
         insert(rows_list, &i);
     }
