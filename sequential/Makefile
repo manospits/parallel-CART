@@ -1,6 +1,6 @@
 OBJS   = main.o tree.o node.o forest.o sampling.o io.o list.o element.o
 OUT    = cart
-CC     = icc
+CC     = gcc
 FLAGS  = -g -c -Wall -std=c99
 
 ALL: $(OUT) 

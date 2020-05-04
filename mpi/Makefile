@@ -1,6 +1,6 @@
-OBJS   = main.o tree.o node.o forest.o sampling.o io.o list.o element.o
+OBJS   = main.o tree.o node.o sampling.o io.o list.o element.o
 OUT    = cart
-CC     = mpiicc
+CC     = mpicc
 FLAGS  = -g -c -Wall -std=c99
 
 ALL: $(OUT) 
@@ -14,9 +14,6 @@ tree.o: tree/src/tree.c
 	$(CC) $(FLAGS) $?
 
 node.o: tree/src/node.c
-	$(CC) $(FLAGS) $?
-
-forest.o: forest/src/forest.c
 	$(CC) $(FLAGS) $?
 
 sampling.o: forest/src/sampling.c

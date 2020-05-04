@@ -33,13 +33,12 @@ phead sample_indexes(int n_data, int n_samples, int rank) {
     return indexes;
 }
 
-Dataset create_random_subset(Dataset dataset, int n_data, double sample_ratio, int rank) {
+void create_random_subset(Dataset dataset, Dataset *subset, int n_data, double sample_ratio, int rank) {
     int n_samples = n_data * sample_ratio;
 
     phead indexes;
     indexes = sample_indexes(n_data, n_samples, rank);
-    Dataset subset = get_subset(dataset, indexes);
+    *subset = get_subset(dataset, indexes);
 
     ds_list_and_type(indexes);
-    return subset;
 }
