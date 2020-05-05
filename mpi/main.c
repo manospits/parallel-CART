@@ -6,6 +6,7 @@
 #include "forest/include/sampling.h"
 #include "forest/include/forest.h"
 
+
 // Forest and tree settings
 int n_trees = 10;
 int max_tree_height = 5;
@@ -24,8 +25,9 @@ int main(void){
     Dataset test_set;
     Dataset train_subset;
     Tree clf_tree;
-    char **forest_votes;
-    char **forest_predictions;
+    char *forest_votes=NULL;
+    int *recv_counts=NULL;
+    int *dspls=NULL;
     int n_ranks, rank;
 
     MPI_Init(NULL, NULL);
@@ -51,36 +53,45 @@ int main(void){
     printf("[%d] Tree grew up...\n", rank);
 
     // Allocate memory for tree votes
-    char **tree_votes = malloc(sizeof(char*) * test_set->rows);
-
-    for(int i=0; i < test_set->rows; i++){
-        tree_votes[i] = malloc(sizeof(char) * STRING_SIZE);
-    }
+    char * tree_votes = malloc(sizeof(char) *STRING_SIZE * test_set->rows);
 
     printf("[%d] Gathering seeds...\n", rank);
     for(int i = 0; i < test_set->rows; i++) {
-        strcpy(tree_votes[i], predict_row(clf_tree, test_set->data[i]));
+        strcpy(tree_votes+(STRING_SIZE*i), predict_row(clf_tree, test_set->data[i]));
     }
-
     MPI_Barrier(MPI_COMM_WORLD);
 
     // Allocate memory for forest votes
     if(rank == 0) {
-        char **forest_votes = malloc(sizeof(char*) * n_ranks);
-
+        forest_votes = malloc(n_ranks*(test_set->rows)*STRING_SIZE*sizeof(char));
+        recv_counts = malloc(sizeof(int) * n_ranks);
+        dspls = malloc(sizeof(int) * n_ranks);
         for(int i=0; i < n_ranks; i++){
-            forest_votes[i] = malloc(sizeof(char) * STRING_SIZE * test_set->rows);
+            dspls[i] = i * STRING_SIZE * test_set->rows;
+            recv_counts[i] = test_set->rows * STRING_SIZE;
         }
     }
 
     printf("[%d] Sending votes\n", rank);
 
-    MPI_Gather(tree_votes, test_set->rows, MPI_CHAR, forest_votes, test_set->rows, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Gatherv(tree_votes, test_set->rows * STRING_SIZE , MPI_CHAR, forest_votes, recv_counts, dspls, MPI_CHAR, 0, MPI_COMM_WORLD);
 
-    printf("Chopping the tree :\\\n");
+    printf("[%d] Chop chop chop the tree :3\n", rank);
     del_tree(clf_tree);
 
     printf("[%d] Cleaning up...\n", rank);
+    if(rank == 0){
+        //printing the results loop
+        /*for (int i=0; i< n_ranks; i++){*/
+            /*printf("Seeds from tree number: %d\n",i);*/
+            /*for(int j=0;j< test_set->rows;j++){*/
+                /*printf("%s\n",forest_votes+sizeof(char)*(dspls[i]+j*(STRING_SIZE)));*/
+            /*}*/
+        /*}*/
+        free(forest_votes);
+        free(recv_counts);
+        free(dspls);
+    }
     // free_predictions(tree_votes, n_trees);
     // free_predictions(forest_predictions, test_set->rows);
     free_subset_dataset(train_set);
@@ -91,3 +102,5 @@ int main(void){
     MPI_Finalize();
     return 0;
 }
+
+
