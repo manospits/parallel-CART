@@ -12,6 +12,8 @@ int max_tree_height = 5;
 double sample_ratio = 0.8;
 double test_train_ratio = 0.8;
 
+double start_time, stop_time;
+
 void free_predictions(char **predictions, int n_trees) {
     for(int i = 0; i < n_trees; i++) {
         free(predictions[i]);
@@ -40,6 +42,8 @@ int main(void){
     MPI_Init(NULL, NULL);
     MPI_Comm_size(MPI_COMM_WORLD, &n_ranks);
     MPI_Comm_rank(MPI_COMM_WORLD, &rank);
+
+    start_time = MPI_Wtime();
 
     printf("[%d] Reading dataset...\n", rank);
     dt = read_dataset("../data/7796666/dataset100.csv",",",1,b,1);
@@ -85,7 +89,7 @@ int main(void){
     printf("[%d] Chop chop chop the tree :3\n", rank);
     del_tree(clf_tree);
 
-    printf("[%d] Cleaning up...\n", rank);
+    printf("[%d] Counting votes...\n", rank);
     if(rank == 0){
         // Allocate memory for votes
         char **forest_predictions = malloc(sizeof(char*) * test_set->rows);
@@ -119,6 +123,12 @@ int main(void){
             printf("[%d] %d: %s %s\n", rank, i, forest_predictions[i], get_element_by_col_name(test_set, i, "Gender"));
         }
 
+        stop_time = MPI_Wtime();
+        if(rank == 0) {
+            printf("Time taken: %f\n", stop_time - start_time);
+        }
+
+        printf("[%d] Cleaning up...", rank);
         free_predictions(forest_predictions, n_ranks);
         free(forest_votes);
         free(recv_counts);

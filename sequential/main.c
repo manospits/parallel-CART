@@ -1,14 +1,16 @@
 #include <stdio.h>
-
+#include <time.h>
 #include "io/include/io.h"
 #include "forest/include/forest.h"
+
+double start_time, stop_time;
 
 int main(void){
     // Settings
     /*char *s="species";*/
     char *s="Gender";
     char **b=&s;
-    int n_trees = 10;
+    int n_trees = 4;
     double sample_ratio = 0.8;
     double test_train_ratio = 0.8;
 
@@ -18,6 +20,9 @@ int main(void){
     Dataset test_set;
     char **tree_votes;
     char **forest_predictions;
+
+    clock_t start_time, stop_time;
+    start_time = clock();
 
     printf("Reading dataset...\n");
     dt = read_dataset("../data/7796666/dataset100.csv",",",1,b,1);
@@ -39,7 +44,8 @@ int main(void){
         printf("%d: %s %s\n", i, forest_predictions[i], get_element_by_col_name(test_set, i, "Gender"));
     }
 
-
+    stop_time = clock() - start_time;
+    printf("Time taken: %f\n", ((double)stop_time)/CLOCKS_PER_SEC);
 
     printf("Cleaning up...\n");
     free_predictions(tree_votes, n_trees);
