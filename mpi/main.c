@@ -4,7 +4,6 @@
 #include "io/include/io.h"
 #include "tree/include/tree.h"
 #include "forest/include/sampling.h"
-#include "forest/include/forest.h"
 
 
 // Forest and tree settings
@@ -12,6 +11,14 @@ int n_trees = 10;
 int max_tree_height = 5;
 double sample_ratio = 0.8;
 double test_train_ratio = 0.8;
+
+void free_predictions(char **predictions, int n_trees) {
+    for(int i = 0; i < n_trees; i++) {
+        free(predictions[i]);
+    }
+
+    free(predictions);
+}
 
 int main(void){
     // Settings
@@ -59,7 +66,6 @@ int main(void){
     for(int i = 0; i < test_set->rows; i++) {
         strcpy(tree_votes+(STRING_SIZE*i), predict_row(clf_tree, test_set->data[i]));
     }
-    MPI_Barrier(MPI_COMM_WORLD);
 
     // Allocate memory for forest votes
     if(rank == 0) {
@@ -81,19 +87,45 @@ int main(void){
 
     printf("[%d] Cleaning up...\n", rank);
     if(rank == 0){
-        //printing the results loop
-        /*for (int i=0; i< n_ranks; i++){*/
-            /*printf("Seeds from tree number: %d\n",i);*/
-            /*for(int j=0;j< test_set->rows;j++){*/
-                /*printf("%s\n",forest_votes+sizeof(char)*(dspls[i]+j*(STRING_SIZE)));*/
-            /*}*/
-        /*}*/
+        // Allocate memory for votes
+        char **forest_predictions = malloc(sizeof(char*) * test_set->rows);
+        for(int i = 0; i < test_set->rows; i++) {
+            forest_predictions[i] = malloc(sizeof(char) * STRING_SIZE);
+        }
+
+        // Iterate each predicted class
+        for(int j = 0; j < test_set->rows; j++) {
+            // Iterate each trees prediction and find most common
+            int max_count = 0;
+
+            for(int i = 0; i < n_ranks; i++) {
+                int count = 0;
+
+                for(int k = 0; k < n_ranks; k++) {
+                    if(strcmp(forest_votes+sizeof(char)*(dspls[i]+j*(STRING_SIZE)), forest_votes+sizeof(char)*(dspls[k]+j*(STRING_SIZE))) == 0) {
+                        count += 1;
+                    }
+                }
+
+                // Set jth prediction to most common vote
+                if(count > max_count) {
+                    max_count = count;
+                    strcpy(forest_predictions[j], forest_votes+sizeof(char)*(dspls[i]+j*(STRING_SIZE)));
+                }
+            }
+        }
+
+        for(int i = 0; i < test_set->rows; i++) {
+            printf("[%d] %d: %s %s\n", rank, i, forest_predictions[i], get_element_by_col_name(test_set, i, "Gender"));
+        }
+
+        free_predictions(forest_predictions, n_ranks);
         free(forest_votes);
         free(recv_counts);
         free(dspls);
     }
-    // free_predictions(tree_votes, n_trees);
-    // free_predictions(forest_predictions, test_set->rows);
+
+    free(tree_votes);
     free_subset_dataset(train_set);
     free_subset_dataset(test_set);
     free_subset_dataset(train_subset);
