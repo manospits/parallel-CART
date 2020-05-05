@@ -1,369 +1,288 @@
-==8743== Memcheck, a memory error detector
-==8743== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
-==8743== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
-==8743== Command: ./cart
-==8743== Parent PID: 8738
-==8743== 
-==8742== Thread 3:
-==8742== Syscall param writev(vector[...]) points to uninitialised byte(s)
-==8742==    at 0x52856E7: writev (writev.c:26)
-==8742==    by 0x824028C: OPAL_MCA_PMIX3X_pmix_ptl_base_send_handler (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x589BB30: event_persist_closure (event.c:1321)
-==8742==    by 0x589BB30: event_process_active_single_queue (event.c:1365)
-==8742==    by 0x589BB30: event_process_active (event.c:1440)
-==8742==    by 0x589BB30: opal_libevent2022_event_base_loop (event.c:1644)
-==8742==    by 0x81E50DD: progress_engine (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x60DB6DA: start_thread (pthread_create.c:463)
-==8742==    by 0x529088E: clone (clone.S:95)
-==8742==  Address 0x6aae6ef is 127 bytes inside a block of size 5,120 alloc'd
-==8742==    at 0x4C31D2F: realloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8742==    by 0x821FBBA: OPAL_MCA_PMIX3X_pmix_bfrop_buffer_extend (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x8222D37: OPAL_MCA_PMIX3X_pmix_bfrops_base_pack_byte (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x822364D: OPAL_MCA_PMIX3X_pmix_bfrops_base_pack_buf (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x8222F3A: OPAL_MCA_PMIX3X_pmix_bfrops_base_pack (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x81981C3: _commitfn (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x589C108: event_process_active_single_queue (event.c:1370)
-==8742==    by 0x589C108: event_process_active (event.c:1440)
-==8742==    by 0x589C108: opal_libevent2022_event_base_loop (event.c:1644)
-==8742==    by 0x81E50DD: progress_engine (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x60DB6DA: start_thread (pthread_create.c:463)
-==8742==    by 0x529088E: clone (clone.S:95)
-==8742== 
-==8743== 
-==8743== Process terminating with default action of signal 15 (SIGTERM)
-==8743==    at 0x52539D0: nanosleep (nanosleep.c:28)
-==8743==    by 0x5286876: usleep (usleep.c:32)
-==8743==    by 0x4E8C956: ompi_mpi_finalize (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x10935D: main (main.c:91)
-==8743== 
-==8743== HEAP SUMMARY:
-==8743==     in use at exit: 2,876,135 bytes in 9,068 blocks
-==8743==   total heap usage: 2,533,001 allocs, 2,523,933 frees, 38,214,636 bytes allocated
-==8743== 
-==8743== Thread 1:
-==8743== 1 bytes in 1 blocks are definitely lost in loss record 2 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x520C9B9: strdup (strdup.c:42)
-==8743==    by 0xD55E042: ??? (in /dev/shm/vader_segment.ubu-.d4a60001.0)
-==8743==    by 0xD35859F: ??? (in /dev/shm/vader_segment.ubu-.d4a60001.0)
-==8743==    by 0x587A08A: mca_base_framework_components_register (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x587A411: mca_base_framework_register (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x587A470: mca_base_framework_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x4F235F4: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 32 bytes in 1 blocks are definitely lost in loss record 4,608 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x77150CF: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 32 bytes in 1 blocks are definitely lost in loss record 4,609 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x771517E: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 32 bytes in 1 blocks are definitely lost in loss record 4,610 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x7715230: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 32 bytes in 1 blocks are definitely lost in loss record 4,611 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x77152E3: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 32 bytes in 1 blocks are definitely lost in loss record 4,612 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x94D6EA8: fetch_nodeinfo (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_hash.so)
-==8743==    by 0x94D909B: hash_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_hash.so)
-==8743==    by 0x81A4E6A: _getnb_cbfunc (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x823A2CD: OPAL_MCA_PMIX3X_pmix_ptl_base_process_msg (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x589C108: event_process_active_single_queue (event.c:1370)
-==8743==    by 0x589C108: event_process_active (event.c:1440)
-==8743==    by 0x589C108: opal_libevent2022_event_base_loop (event.c:1644)
-==8743==    by 0x81E50DD: progress_engine (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x60DB6DA: start_thread (pthread_create.c:463)
-==8743==    by 0x529088E: clone (clone.S:95)
-==8743== 
-==8743== 32 bytes in 1 blocks are definitely lost in loss record 4,613 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x7715833: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 37 (32 direct, 5 indirect) bytes in 1 blocks are definitely lost in loss record 4,863 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x4E88404: ompi_proc_complete_init_single (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4E88EA0: ompi_proc_complete_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4F237DF: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 55 (32 direct, 23 indirect) bytes in 1 blocks are definitely lost in loss record 5,320 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x4E6A6DE: ompi_comm_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4F23787: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 56 (32 direct, 24 indirect) bytes in 1 blocks are definitely lost in loss record 5,355 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0xC33CF00: mca_btl_tcp_proc_create (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_tcp.so)
-==8743==    by 0xC335E7B: mca_btl_tcp_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_tcp.so)
-==8743==    by 0xC12FDB5: mca_bml_r2_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_bml_r2.so)
-==8743==    by 0xD970973: mca_pml_ob1_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pml_ob1.so)
-==8743==    by 0x4F23835: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743== 
-==8743== 62 (32 direct, 30 indirect) bytes in 1 blocks are definitely lost in loss record 5,416 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x77165E6: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 62 (32 direct, 30 indirect) bytes in 1 blocks are definitely lost in loss record 5,417 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x7716C1B: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 79 (64 direct, 15 indirect) bytes in 1 blocks are definitely lost in loss record 5,801 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0xBF2B1C8: mca_mpool_hugepage_open (in /home/sgmcart3/.openmpi/lib/openmpi/mca_mpool_hugepage.so)
-==8743==    by 0x586E8ED: mca_base_framework_components_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x58E8311: mca_mpool_base_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x587A4E0: mca_base_framework_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x4F23597: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 272 bytes in 1 blocks are possibly lost in loss record 6,969 of 7,320
-==8743==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x40134A6: allocate_dtv (dl-tls.c:286)
-==8743==    by 0x40134A6: _dl_allocate_tls (dl-tls.c:530)
-==8743==    by 0x60DC227: allocate_stack (allocatestack.c:627)
-==8743==    by 0x60DC227: pthread_create@@GLIBC_2.2.5 (pthread_create.c:644)
-==8743==    by 0x5852E25: opal_thread_start (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x5852759: opal_progress_thread_init (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8743==    by 0x7714F06: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x108FD6: main (main.c:31)
-==8743== 
-==8743== 272 bytes in 1 blocks are possibly lost in loss record 6,970 of 7,320
-==8743==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x40134A6: allocate_dtv (dl-tls.c:286)
-==8743==    by 0x40134A6: _dl_allocate_tls (dl-tls.c:530)
-==8743==    by 0x60DC227: allocate_stack (allocatestack.c:627)
-==8743==    by 0x60DC227: pthread_create@@GLIBC_2.2.5 (pthread_create.c:644)
-==8743==    by 0x81620A5: OPAL_MCA_PMIX3X_pmix_thread_start (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81E5389: pmix_progress_thread_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81E48FB: OPAL_MCA_PMIX3X_pmix_rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x819B5AE: OPAL_MCA_PMIX3X_PMIx_Init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x814287C: pmix3x_client_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x7714FBB: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8743==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8743==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743== 
-==8743== 4,184 (32 direct, 4,152 indirect) bytes in 1 blocks are definitely lost in loss record 7,294 of 7,320
-==8743==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8743==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8743==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8743==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8743==    by 0xC94D50C: vader_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_vader.so)
-==8743==    by 0xC12FDB5: mca_bml_r2_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_bml_r2.so)
-==8743==    by 0xD970973: mca_pml_ob1_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pml_ob1.so)
-==8743==    by 0x4F23835: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8743== 
-==8743== LEAK SUMMARY:
-==8743==    definitely lost: 449 bytes in 14 blocks
-==8743==    indirectly lost: 4,279 bytes in 7 blocks
-==8743==      possibly lost: 544 bytes in 2 blocks
-==8743==    still reachable: 2,870,863 bytes in 9,045 blocks
-==8743==         suppressed: 0 bytes in 0 blocks
-==8743== Reachable blocks (those to which a pointer was found) are not shown.
-==8743== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==8743== 
-==8743== For counts of detected and suppressed errors, rerun with: -v
-==8743== Use --track-origins=yes to see where uninitialised values come from
-==8743== ERROR SUMMARY: 17 errors from 17 contexts (suppressed: 0 from 0)
-/lib/libmpi.so.40.20.3)
-==8742== 
-==8742== 62 (32 direct, 30 indirect) bytes in 1 blocks are definitely lost in loss record 5,487 of 7,424
-==8742==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8742==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8742==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8742==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8742==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x77165E6: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8742==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8742==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x108FD6: main (main.c:31)
-==8742== 
-==8742== 62 (32 direct, 30 indirect) bytes in 1 blocks are definitely lost in loss record 5,488 of 7,424
-==8742==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8742==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8742==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8742==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8742==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x7716C1B: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8742==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8742==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x108FD6: main (main.c:31)
-==8742== 
-==8742== 79 (64 direct, 15 indirect) bytes in 1 blocks are definitely lost in loss record 5,893 of 7,424
-==8742==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8742==    by 0xBF2B1C8: mca_mpool_hugepage_open (in /home/sgmcart3/.openmpi/lib/openmpi/mca_mpool_hugepage.so)
-==8742==    by 0x586E8ED: mca_base_framework_components_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8742==    by 0x58E8311: mca_mpool_base_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8742==    by 0x587A4E0: mca_base_framework_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8742==    by 0x4F23597: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x108FD6: main (main.c:31)
-==8742== 
-==8742== 272 bytes in 1 blocks are possibly lost in loss record 7,068 of 7,424
-==8742==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8742==    by 0x40134A6: allocate_dtv (dl-tls.c:286)
-==8742==    by 0x40134A6: _dl_allocate_tls (dl-tls.c:530)
-==8742==    by 0x60DC227: allocate_stack (allocatestack.c:627)
-==8742==    by 0x60DC227: pthread_create@@GLIBC_2.2.5 (pthread_create.c:644)
-==8742==    by 0x5852E25: opal_thread_start (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8742==    by 0x5852759: opal_progress_thread_init (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
-==8742==    by 0x7714F06: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8742==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8742==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x108FD6: main (main.c:31)
-==8742== 
-==8742== 272 bytes in 1 blocks are possibly lost in loss record 7,069 of 7,424
-==8742==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8742==    by 0x40134A6: allocate_dtv (dl-tls.c:286)
-==8742==    by 0x40134A6: _dl_allocate_tls (dl-tls.c:530)
-==8742==    by 0x60DC227: allocate_stack (allocatestack.c:627)
-==8742==    by 0x60DC227: pthread_create@@GLIBC_2.2.5 (pthread_create.c:644)
-==8742==    by 0x81620A5: OPAL_MCA_PMIX3X_pmix_thread_start (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x81E5389: pmix_progress_thread_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x81E48FB: OPAL_MCA_PMIX3X_pmix_rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x819B5AE: OPAL_MCA_PMIX3X_PMIx_Init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x814287C: pmix3x_client_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x7714FBB: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
-==8742==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
-==8742==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742== 
-==8742== 4,184 (32 direct, 4,152 indirect) bytes in 1 blocks are definitely lost in loss record 7,396 of 7,424
-==8742==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
-==8742==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8742==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
-==8742==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
-==8742==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
-==8742==    by 0xC94D50C: vader_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_vader.so)
-==8742==    by 0xC12FDB5: mca_bml_r2_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_bml_r2.so)
-==8742==    by 0xD970973: mca_pml_ob1_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pml_ob1.so)
-==8742==    by 0x4F23835: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
-==8742== 
-==8742== LEAK SUMMARY:
-==8742==    definitely lost: 449 bytes in 14 blocks
-==8742==    indirectly lost: 4,279 bytes in 7 blocks
-==8742==      possibly lost: 544 bytes in 2 blocks
-==8742==    still reachable: 3,104,335 bytes in 9,277 blocks
-==8742==         suppressed: 0 bytes in 0 blocks
-==8742== Reachable blocks (those to which a pointer was found) are not shown.
-==8742== To see them, rerun with: --leak-check=full --show-leak-kinds=all
-==8742== 
-==8742== For counts of detected and suppressed errors, rerun with: -v
-==8742== Use --track-origins=yes to see where uninitialised values come from
-==8742== ERROR SUMMARY: 512 errors from 28 contexts (suppressed: 0 from 0)
+==10207== Memcheck, a memory error detector
+==10207== Copyright (C) 2002-2017, and GNU GPL'd, by Julian Seward et al.
+==10207== Using Valgrind-3.13.0 and LibVEX; rerun with -h for copyright info
+==10207== Command: ./cart
+==10207== Parent PID: 10202
+==10207== 
+==10207== Thread 3:
+==10207== Syscall param writev(vector[...]) points to uninitialised byte(s)
+==10207==    at 0x52856E7: writev (writev.c:26)
+==10207==    by 0x824028C: OPAL_MCA_PMIX3X_pmix_ptl_base_send_handler (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x589BB30: event_persist_closure (event.c:1321)
+==10207==    by 0x589BB30: event_process_active_single_queue (event.c:1365)
+==10207==    by 0x589BB30: event_process_active (event.c:1440)
+==10207==    by 0x589BB30: opal_libevent2022_event_base_loop (event.c:1644)
+==10207==    by 0x81E50DD: progress_engine (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x60DB6DA: start_thread (pthread_create.c:463)
+==10207==    by 0x529088E: clone (clone.S:95)
+==10207==  Address 0x6aae33f is 127 bytes inside a block of size 5,120 alloc'd
+==10207==    at 0x4C31D2F: realloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x821FBBA: OPAL_MCA_PMIX3X_pmix_bfrop_buffer_extend (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8222D37: OPAL_MCA_PMIX3X_pmix_bfrops_base_pack_byte (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x822364D: OPAL_MCA_PMIX3X_pmix_bfrops_base_pack_buf (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8222F3A: OPAL_MCA_PMIX3X_pmix_bfrops_base_pack (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81981C3: _commitfn (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x589C108: event_process_active_single_queue (event.c:1370)
+==10207==    by 0x589C108: event_process_active (event.c:1440)
+==10207==    by 0x589C108: opal_libevent2022_event_base_loop (event.c:1644)
+==10207==    by 0x81E50DD: progress_engine (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x60DB6DA: start_thread (pthread_create.c:463)
+==10207==    by 0x529088E: clone (clone.S:95)
+==10207==  Uninitialised value was created by a stack allocation
+==10207==    at 0xC94E446: mca_btl_base_vader_modex_send (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_vader.so)
+==10207== 
+==10207== 
+==10207== Process terminating with default action of signal 15 (SIGTERM)
+==10207==    at 0x52539D0: nanosleep (nanosleep.c:28)
+==10207==    by 0x5286876: usleep (usleep.c:32)
+==10207==    by 0x4E8C956: ompi_mpi_finalize (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x109357: main (main.c:91)
+==10207== 
+==10207== HEAP SUMMARY:
+==10207==     in use at exit: 2,876,175 bytes in 9,068 blocks
+==10207==   total heap usage: 2,536,456 allocs, 2,527,388 frees, 38,367,327 bytes allocated
+==10207== 
+==10207== Thread 1:
+==10207== 1 bytes in 1 blocks are definitely lost in loss record 2 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x520C9B9: strdup (strdup.c:42)
+==10207==    by 0xD55E042: ??? (in /dev/shm/vader_segment.ubu-.d15e0001.0)
+==10207==    by 0xD35859F: ??? (in /dev/shm/vader_segment.ubu-.d15e0001.0)
+==10207==    by 0x587A08A: mca_base_framework_components_register (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x587A411: mca_base_framework_register (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x587A470: mca_base_framework_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x4F235F4: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 32 bytes in 1 blocks are definitely lost in loss record 4,607 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x77150CF: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 32 bytes in 1 blocks are definitely lost in loss record 4,608 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x771517E: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 32 bytes in 1 blocks are definitely lost in loss record 4,609 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x7715230: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 32 bytes in 1 blocks are definitely lost in loss record 4,610 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x77152E3: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 32 bytes in 1 blocks are definitely lost in loss record 4,611 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x94D6EA8: fetch_nodeinfo (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_hash.so)
+==10207==    by 0x94D909B: hash_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_hash.so)
+==10207==    by 0x81A4E6A: _getnb_cbfunc (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x823A2CD: OPAL_MCA_PMIX3X_pmix_ptl_base_process_msg (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x589C108: event_process_active_single_queue (event.c:1370)
+==10207==    by 0x589C108: event_process_active (event.c:1440)
+==10207==    by 0x589C108: opal_libevent2022_event_base_loop (event.c:1644)
+==10207==    by 0x81E50DD: progress_engine (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x60DB6DA: start_thread (pthread_create.c:463)
+==10207==    by 0x529088E: clone (clone.S:95)
+==10207== 
+==10207== 32 bytes in 1 blocks are definitely lost in loss record 4,612 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x7715833: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 32 bytes in 1 blocks are definitely lost in loss record 4,613 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0xC94D50C: vader_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_vader.so)
+==10207==    by 0xC12FDB5: mca_bml_r2_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_bml_r2.so)
+==10207==    by 0xD970973: mca_pml_ob1_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pml_ob1.so)
+==10207==    by 0x4F23835: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207== 
+==10207== 37 (32 direct, 5 indirect) bytes in 1 blocks are definitely lost in loss record 4,864 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x4E88404: ompi_proc_complete_init_single (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4E88EA0: ompi_proc_complete_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4F237DF: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 55 (32 direct, 23 indirect) bytes in 1 blocks are definitely lost in loss record 5,320 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x4E6A6DE: ompi_comm_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4F23787: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 56 (32 direct, 24 indirect) bytes in 1 blocks are definitely lost in loss record 5,355 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0xC33CF00: mca_btl_tcp_proc_create (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_tcp.so)
+==10207==    by 0xC335E7B: mca_btl_tcp_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_tcp.so)
+==10207==    by 0xC12FDB5: mca_bml_r2_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_bml_r2.so)
+==10207==    by 0xD970973: mca_pml_ob1_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pml_ob1.so)
+==10207==    by 0x4F23835: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207== 
+==10207== 62 (32 direct, 30 indirect) bytes in 1 blocks are definitely lost in loss record 5,417 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x77165E6: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 62 (32 direct, 30 indirect) bytes in 1 blocks are definitely lost in loss record 5,418 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x98EFC17: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8149238: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x7716C1B: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 79 (64 direct, 15 indirect) bytes in 1 blocks are definitely lost in loss record 5,802 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0xBF2B1C8: mca_mpool_hugepage_open (in /home/sgmcart3/.openmpi/lib/openmpi/mca_mpool_hugepage.so)
+==10207==    by 0x586E8ED: mca_base_framework_components_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x58E8311: mca_mpool_base_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x587A4E0: mca_base_framework_open (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x4F23597: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 272 bytes in 1 blocks are possibly lost in loss record 6,970 of 7,320
+==10207==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x40134A6: allocate_dtv (dl-tls.c:286)
+==10207==    by 0x40134A6: _dl_allocate_tls (dl-tls.c:530)
+==10207==    by 0x60DC227: allocate_stack (allocatestack.c:627)
+==10207==    by 0x60DC227: pthread_create@@GLIBC_2.2.5 (pthread_create.c:644)
+==10207==    by 0x5852E25: opal_thread_start (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x5852759: opal_progress_thread_init (in /home/sgmcart3/.openmpi/lib/libopen-pal.so.40.20.3)
+==10207==    by 0x7714F06: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x108FD6: main (main.c:31)
+==10207== 
+==10207== 272 bytes in 1 blocks are possibly lost in loss record 6,971 of 7,320
+==10207==    at 0x4C31B25: calloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x40134A6: allocate_dtv (dl-tls.c:286)
+==10207==    by 0x40134A6: _dl_allocate_tls (dl-tls.c:530)
+==10207==    by 0x60DC227: allocate_stack (allocatestack.c:627)
+==10207==    by 0x60DC227: pthread_create@@GLIBC_2.2.5 (pthread_create.c:644)
+==10207==    by 0x81620A5: OPAL_MCA_PMIX3X_pmix_thread_start (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81E5389: pmix_progress_thread_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81E48FB: OPAL_MCA_PMIX3X_pmix_rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x819B5AE: OPAL_MCA_PMIX3X_PMIx_Init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x814287C: pmix3x_client_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x7714FBB: rte_init (in /home/sgmcart3/.openmpi/lib/openmpi/mca_ess_pmi.so)
+==10207==    by 0x55E8EE0: orte_init (in /home/sgmcart3/.openmpi/lib/libopen-rte.so.40.20.3)
+==10207==    by 0x4F2321B: ompi_mpi_init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207==    by 0x4EBC100: PMPI_Init (in /home/sgmcart3/.openmpi/lib/libmpi.so.40.20.3)
+==10207== 
+==10207== 4,152 bytes in 1 blocks are possibly lost in loss record 7,292 of 7,320
+==10207==    at 0x4C2FB0F: malloc (in /usr/lib/valgrind/vgpreload_memcheck-amd64-linux.so)
+==10207==    by 0x82292F0: OPAL_MCA_PMIX3X_pmix_bfrops_base_unpack_bo (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x822A582: OPAL_MCA_PMIX3X_pmix_bfrops_base_unpack_val (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x822A7C2: OPAL_MCA_PMIX3X_pmix_bfrops_base_unpack_value (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8227ED8: OPAL_MCA_PMIX3X_pmix_bfrops_base_unpack (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x98EFCDE: _dstore_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x98F2A22: pmix_common_dstor_fetch (in /home/sgmcart3/.openmpi/lib/libmca_common_dstore.so.1.0.2)
+==10207==    by 0x96E4D18: ds21_fetch (in /home/sgmcart3/.openmpi/lib/pmix/mca_gds_ds21.so)
+==10207==    by 0x81AA2BD: OPAL_MCA_PMIX3X_PMIx_Get_nb (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x81ACD3C: OPAL_MCA_PMIX3X_PMIx_Get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0x8148F98: pmix3x_get (in /home/sgmcart3/.openmpi/lib/openmpi/mca_pmix_pmix3x.so)
+==10207==    by 0xC94D50C: vader_add_procs (in /home/sgmcart3/.openmpi/lib/openmpi/mca_btl_vader.so)
+==10207== 
+==10207== LEAK SUMMARY:
+==10207==    definitely lost: 449 bytes in 14 blocks
+==10207==    indirectly lost: 127 bytes in 6 blocks
+==10207==      possibly lost: 4,696 bytes in 3 blocks
+==10207==    still reachable: 2,870,903 bytes in 9,045 blocks
+==10207==         suppressed: 0 bytes in 0 blocks
+==10207== Reachable blocks (those to which a pointer was found) are not shown.
+==10207== To see them, rerun with: --leak-check=full --show-leak-kinds=all
+==10207== 
+==10207== For counts of detected and suppressed errors, rerun with: -v
+==10207== ERROR SUMMARY: 18 errors from 18 contexts (suppressed: 0 from 0)

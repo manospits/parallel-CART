@@ -69,13 +69,13 @@ int main(void){
         char **forest_votes = malloc(sizeof(char*) * n_ranks);
 
         for(int i=0; i < n_ranks; i++){
-            forest_votes[i] = malloc(sizeof(char) * test_set->rows);
+            forest_votes[i] = malloc(sizeof(char) * STRING_SIZE * test_set->rows);
         }
     }
 
     printf("[%d] Sending votes\n", rank);
 
-    MPI_Gather(&tree_votes, STRING_SIZE * test_set->rows, MPI_CHAR, &forest_votes, STRING_SIZE * test_set->rows, MPI_CHAR, 0, MPI_COMM_WORLD);
+    MPI_Gather(tree_votes, test_set->rows, MPI_CHAR, forest_votes, test_set->rows, MPI_CHAR, 0, MPI_COMM_WORLD);
 
     printf("Chopping the tree :\\\n");
     del_tree(clf_tree);
